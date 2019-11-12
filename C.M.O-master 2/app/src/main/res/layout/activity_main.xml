@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/main_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/logout_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/log_out"
+                android:layout_marginTop="80dp"
+                tools:layout_editor_absoluteY="54dp"
+                android:layout_marginStart="320dp"/>
+
+<!--            <ImageButton-->
+<!--                android:id="@+id/add_new_post_button"-->
+<!--                android:layout_width="48dp"-->
+<!--                android:layout_height="48dp"-->
+<!--                android:layout_below="@+id/logout_button"-->
+<!--                android:layout_alignParentRight="true"-->
+<!--                android:layout_marginTop="50dp"-->
+<!--                android:layout_marginRight="12dp"-->
+<!--                android:baselineAlignBottom="false"-->
+<!--                android:focusableInTouchMode="false"-->
+<!--                android:scaleType="centerCrop"-->
+<!--                android:src="@android:drawable/ic_input_add"-->
+<!--                android:text="Post"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                tools:layout_editor_absoluteX="347dp" />-->
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/all_users_post_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <ImageButton
+                android:id="@+id/add_new_post_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                app:srcCompat="@android:drawable/ic_input_add"
+                android:layout_marginStart="360dp"
+                android:contentDescription="@string/todo" />
+
+        </FrameLayout>
+
+    </RelativeLayout>
+
+</androidx.drawerlayout.widget.DrawerLayout>
+

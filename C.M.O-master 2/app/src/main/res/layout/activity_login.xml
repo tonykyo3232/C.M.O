@@ -1,0 +1,68 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/background5"
+    tools:context=".LoginActivity">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_alignParentTop='true'
+        android:layout_marginTop="29dp"
+        android:layout_marginLeft="130dp"
+        app:srcCompat="@mipmap/icon"
+        tools:srcCompat="@mipmap/icon" />
+
+    <EditText
+        android:id="@+id/register_email"
+        android:layout_marginTop="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView"
+        android:layout_centerHorizontal='true'
+        android:ems="10"
+        android:hint=" Email"
+        android:inputType="textEmailAddress"
+        android:background='@drawable/input'
+        android:padding="10dp"
+        />
+
+    <EditText
+        android:id="@+id/register_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/register_email"
+        android:layout_marginTop="58dp"
+        android:background='@drawable/input'
+        android:ems="10"
+        android:hint=" Password"
+        android:inputType="textPassword"
+        android:padding="10dp" />
+
+
+    <Button
+        android:id="@+id/register_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/register_password"
+        android:layout_marginTop="90dp"
+        android:background='@drawable/button'
+        android:hint="Log in"
+        android:padding="10dp" />
+
+    <TextView
+        android:id="@+id/need_account"
+        android:layout_width="500dp"
+        android:layout_height="80dp"
+        android:layout_below="@id/register_button"
+        android:text="Don't have an Account, need new account"
+        android:textColor="#E91E63"
+        android:textColorLink="#00E60000"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+
+</RelativeLayout>

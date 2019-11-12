@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/background5">
+
+    <ImageView
+        android:id="@+id/setup_image"
+        android:layout_width="157dp"
+        android:layout_height="167dp"
+        android:layout_marginLeft="130dp"
+        app:srcCompat="@mipmap/default_profile"
+        tools:srcCompat="@mipmap/default_profile" />
+
+    <EditText
+        android:id="@+id/setup_username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:gravity="start|top"
+        android:hint="username"
+        android:inputType="textMultiLine"
+        android:background="@drawable/input"
+        android:padding="15dp"
+        android:layout_below="@id/setup_image"
+        android:layout_marginTop="50dp"
+        />
+
+    <EditText
+        android:id="@+id/setup_full_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:gravity="start|top"
+        android:hint="Full Name"
+        android:inputType="textMultiLine"
+        android:background="@drawable/input"
+        android:padding="15dp"
+        android:layout_below="@id/setup_username"
+        android:layout_marginTop="50dp"
+        />
+
+    <EditText
+        android:id="@+id/setup_country"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:gravity="start|top"
+        android:hint="Country"
+        android:inputType="textMultiLine"
+        android:background="@drawable/input"
+        android:padding="15dp"
+        android:layout_below="@id/setup_full_name"
+        android:layout_marginTop="50dp"
+        />
+
+    <Button
+        android:id="@+id/setup_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/setup_country"
+        android:background="@drawable/button"
+        android:text="Save"
+        android:layout_marginLeft="165dp"
+        android:layout_marginTop="30dp" />
+</RelativeLayout>
