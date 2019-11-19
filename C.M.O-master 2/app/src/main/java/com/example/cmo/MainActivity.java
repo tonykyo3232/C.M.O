@@ -6,13 +6,11 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,11 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 //import com.google.firebase.ml.vision.common.FirebaseVisionImage; // doesn't work...
 import com.squareup.picasso.Picasso;
 
@@ -170,6 +165,7 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     protected void populateViewHolder(PostsViewHolder viewHolder, Posts model, int position)
                     {
+                        final String PostKey = getRef(position).getKey();
 
                         viewHolder.setFullname(model.getFullname());
                         viewHolder.setTime(model.getTime());
@@ -179,6 +175,15 @@ public class MainActivity extends AppCompatActivity
                         viewHolder.setProfileimage(getApplicationContext(), model.getProfileimage());
 
                         viewHolder.setPostimage(getApplicationContext(), model.getPostimage());
+
+                        viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent clickPostIntent = new Intent (MainActivity.this, ClickPostActivity.class);
+                                clickPostIntent.putExtra("PostKey",PostKey);
+                                startActivity(clickPostIntent);
+                            }
+                        });
                     }
                 };
         postList.setAdapter(firebaseRecyclerAdapter);
@@ -234,6 +239,7 @@ public class MainActivity extends AppCompatActivity
         public void setPostimage(Context ctx1,  String postimage)
         {
             ImageView PostImage = (ImageView) mView.findViewById(R.id.post_image);
+
 //            Picasso.with(ctx1).load(postimage).into(PostImage);
             Log.d(MainActivity.class.getSimpleName(), "==============\npostimage: [" + postimage + "\n===============");
             Picasso.get().load(postimage).into(PostImage);
