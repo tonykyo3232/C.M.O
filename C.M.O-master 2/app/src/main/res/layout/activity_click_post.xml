@@ -8,9 +8,13 @@
 
     <ImageView
         android:id="@+id/click_post_image"
-        android:layout_width="500dp"
+        android:layout_width="400dp"
         android:layout_height="200dp"
-        app:srcCompat="@drawable/ic_menu_gallery" />
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="10dp"
+        app:srcCompat="@drawable/ic_menu_gallery"
+        />
 
     <TextView
         android:id="@+id/click_post_description"
@@ -18,6 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/click_post_image"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="90dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="20dp"
         android:text="Text descritpion"
@@ -29,6 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/click_post_description"
+        android:layout_marginTop="100dp"
         android:text="Edit Post" />
 
     <Button
@@ -36,5 +42,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/edit_post_button"
+        android:layout_marginTop="20dp"
         android:text="Delete Post" />
 </RelativeLayout>
