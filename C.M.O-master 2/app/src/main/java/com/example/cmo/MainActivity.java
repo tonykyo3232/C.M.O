@@ -235,7 +235,8 @@ public class MainActivity extends AppCompatActivity
         {
             TextView PostTime = (TextView) mView.findViewById(R.id.post_time);
 //            PostTime.setText("    " + "4:00");
-            PostTime.setText(" " + time);
+//            PostTime.setText(" " + time);
+            PostTime.setText(time);
         }
 
         public void setDate(String date)
