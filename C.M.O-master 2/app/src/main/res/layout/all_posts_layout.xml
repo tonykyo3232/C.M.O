@@ -62,9 +62,8 @@
                         android:layout_height="wrap_content"
                         android:text="@string/has_been_updated_a_post"
                         android:textColor="@android:color/darker_gray"
-                        android:textSize="13sp"
-                        android:textStyle="bold">
-                    </TextView>
+                        android:textSize="11sp"
+                        android:textStyle="bold"></TextView>
 
 
                     <TextView
@@ -73,8 +72,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/date"
                         android:textColor="@android:color/black"
-                        android:textSize="13sp">
-                    </TextView>
+                        android:textSize="11sp"></TextView>
 
 
                     <TextView
@@ -83,8 +81,15 @@
                         android:layout_height="wrap_content"
                         android:text="@string/time"
                         android:textColor="@android:color/black"
-                        android:textSize="13sp">
-                    </TextView>
+                        android:textSize="11sp"></TextView>
+
+                    <TextView
+                        android:id="@+id/post_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Location"
+                        android:textColor="@android:color/black"
+                        android:textSize="10sp"></TextView>
 
 
 

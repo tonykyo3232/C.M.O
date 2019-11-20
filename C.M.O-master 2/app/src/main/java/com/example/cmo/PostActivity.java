@@ -38,7 +38,7 @@ public class PostActivity extends AppCompatActivity {
     //private ProgressDialog loadingBar;
 
     private Button UpdatePostButton;
-    private EditText PostDescription;
+    private EditText PostDescription, PostLocation;
     private ImageButton SelectPostImage;
 
     private  static final int Gallery_Pick = 1;
@@ -52,7 +52,7 @@ public class PostActivity extends AppCompatActivity {
     private String saveCurrentDate, saveCurrentTime, postRandomName, downloadUrl, current_user_id;
 
     // By Tony
-    private String image_url_detail;
+    private String image_url_detail, Location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +72,10 @@ public class PostActivity extends AppCompatActivity {
         SelectPostImage = findViewById(R.id.UploadImage);
         UpdatePostButton = findViewById(R.id.UpdatePostButton);
         PostDescription = findViewById(R.id.PostText);
+
+        // new
+        PostLocation = findViewById(R.id.location);
+
         //loadingbar...
 
         SelectPostImage.setOnClickListener(new View.OnClickListener() {
@@ -96,6 +100,9 @@ public class PostActivity extends AppCompatActivity {
         Log.d(PostActivity.class.getSimpleName(), "ValidatePostInfo\n");
 
         Description = PostDescription.getText().toString();
+
+        // new
+        Location = PostLocation.getText().toString();
 
         if(ImageUri == null){
             Toast.makeText(this, "Please select post image...", Toast.LENGTH_SHORT).show();
@@ -183,6 +190,7 @@ public class PostActivity extends AppCompatActivity {
 
                     // By Tony
                     postsMap.put("image_url", image_url_detail);
+                    postsMap.put("location", Location);
 
                     // By Tony no used
                     //public Posts(String uid, String time, String date, String postimage, String description, String profileimage, String fullname)
@@ -190,7 +198,6 @@ public class PostActivity extends AppCompatActivity {
 
                     Log.d(PostActivity.class.getSimpleName(), "postRandomName :[ "+ postRandomName + "]\n");
                     Log.d(PostActivity.class.getSimpleName(), "current_user_id + postRandomName :[ "+ current_user_id + postRandomName + "]\n");
-
 
                     // userID + date + time
                     // Example: ClUQj4aEolO9JuZPid6iIAibA9n210-November-201915:02

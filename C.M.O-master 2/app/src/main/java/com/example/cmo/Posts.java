@@ -3,11 +3,11 @@ package com.example.cmo;
 public class Posts
 {
     public String uid, time, date, postimage, description, profileimage, fullname;
-    public String image_url; // By Tony
+    public String image_url, location; // By Tony
 
     public Posts(){}
 
-    public Posts(String uid, String time, String date, String postimage, String description, String profileimage, String fullname, String image_url)
+    public Posts(String uid, String time, String date, String postimage, String description, String profileimage, String fullname, String image_url, String location)
     {
         this.uid = uid;
         this.time = time;
@@ -17,6 +17,7 @@ public class Posts
         this.profileimage = profileimage;
         this.fullname = fullname;
         this.image_url = image_url;
+        this.location = location;
     }
 
     public String getUid() {
@@ -77,4 +78,7 @@ public class Posts
 
     // By Tony
     public String getImage_url(){return image_url;}
+
+    // By Tony
+    public String getLocation() {return location;}
 }

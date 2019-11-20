@@ -10,19 +10,22 @@
 
     <EditText
         android:id="@+id/PostText"
-        android:layout_width="335dp"
-        android:layout_height="220dp"
-        android:layout_marginTop="150dp"
+        android:layout_width="313dp"
+        android:layout_height="169dp"
+        android:layout_marginStart="49dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="49dp"
         android:autofillHints=""
         android:background="@drawable/input"
         android:ems="10"
         android:gravity="start|top"
         android:hint="@string/share_your_stories"
         android:inputType="textMultiLine"
-        app:layout_constraintBottom_toTopOf="@+id/UploadImage"
+        app:layout_constraintBottom_toTopOf="@+id/UpdatePostButton"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/UploadImage"
         tools:ignore="MissingConstraints" />
 
     <Button
@@ -36,23 +39,56 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/UploadImage"
+        app:layout_constraintTop_toBottomOf="@+id/PostText"
+        app:layout_constraintVertical_bias="1.0"
         tools:ignore="MissingConstraints" />
 
     <ImageButton
         android:id="@+id/UploadImage"
-        android:layout_width="319dp"
-        android:layout_height="263dp"
-        android:layout_marginStart="104dp"
-        android:layout_marginTop="57dp"
-        android:layout_marginEnd="105dp"
-        android:layout_marginBottom="60dp"
-        app:layout_constraintBottom_toTopOf="@+id/UpdatePostButton"
+        android:layout_width="157dp"
+        android:layout_height="98dp"
+        android:layout_marginStart="127dp"
+        android:layout_marginEnd="127dp"
+        android:contentDescription="TODO"
+        app:layout_constraintBottom_toTopOf="@+id/PostText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/location"
+        app:srcCompat="@mipmap/download"
+        tools:ignore="MissingConstraints" />
+
+    <EditText
+        android:id="@+id/location"
+        android:layout_width="228dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="91dp"
+        android:layout_marginEnd="92dp"
+        android:layout_marginBottom="35dp"
+        android:background="@drawable/input"
+        android:ems="10"
+        android:hint="Enter the city..."
+        android:inputType="textPostalAddress"
+        app:layout_constraintBottom_toTopOf="@+id/UploadImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="290dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="72dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="49dp"
+        android:fontFamily="casual"
+        android:text="@string/posting_to_c_m_o"
+        android:textColor="#009688"
+        android:textSize="35sp"
+        app:layout_constraintBottom_toTopOf="@+id/location"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/PostText"
-        app:srcCompat="@mipmap/download"
-        tools:ignore="MissingConstraints"
-        android:contentDescription="TODO" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

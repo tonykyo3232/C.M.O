@@ -187,10 +187,11 @@ public class MainActivity extends AppCompatActivity
                         viewHolder.setTime(model.getTime());
                         viewHolder.setDate(model.getDate());
                         viewHolder.setDescription(model.getDescription());
-
                         viewHolder.setProfileimage(getApplicationContext(), model.getProfileimage());
-
 //                        viewHolder.setPostimage(getApplicationContext(), model.getPostimage());
+
+                        // new
+                        viewHolder.setPostLocation(model.getLocation());
                         viewHolder.setPostimage(getApplicationContext(), img_url);
 
                         viewHolder.mView.setOnClickListener(new View.OnClickListener() {
@@ -234,9 +235,7 @@ public class MainActivity extends AppCompatActivity
         public void setTime(String time)
         {
             TextView PostTime = (TextView) mView.findViewById(R.id.post_time);
-//            PostTime.setText("    " + "4:00");
-//            PostTime.setText(" " + time);
-            PostTime.setText(time);
+            PostTime.setText( " " + time);
         }
 
         public void setDate(String date)
@@ -268,6 +267,8 @@ public class MainActivity extends AppCompatActivity
             storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
+                    Log.d(MainActivity.class.getSimpleName(), "onSuccess\n");
+                    Log.d(MainActivity.class.getSimpleName(), "uri.toString(): [" + uri.toString() + "]\n===============");
                     String img_uri = uri.toString();
                     Log.d(MainActivity.class.getSimpleName(), "MainActivity - setPostimage - onSuccess --> " + img_uri + "\n");
                     ImageView PostImage = (ImageView) mView.findViewById(R.id.post_image);
@@ -289,8 +290,16 @@ public class MainActivity extends AppCompatActivity
             //Picasso.get().load(postimage).into(PostImage);
 
         }
-    }
 
+        // new
+        void setPostLocation(String location)
+        {
+            Log.d(MainActivity.class.getSimpleName(), "setPostLocation - " + location);
+            TextView PostLocation = (TextView) mView.findViewById(R.id.post_location);
+            PostLocation.setText(" \n" + location);
+        }
+
+    }
 
     private void SendUserToPostActivity()
     {
