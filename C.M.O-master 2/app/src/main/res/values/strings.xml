@@ -25,4 +25,6 @@
     <string name="todo3">TODO</string>
     <string name="share_your_stories">----Share Your Stories...</string>
     <string name="post">Post</string>
+    <string name="posting_to_c_m_o">Posting to C.M.O</string>
+    <string name="location">Location</string>
 </resources>
