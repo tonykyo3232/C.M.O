@@ -51,6 +51,9 @@ public class PostActivity extends AppCompatActivity {
 
     private String saveCurrentDate, saveCurrentTime, postRandomName, downloadUrl, current_user_id;
 
+    // By Tony
+    private String image_url_detail;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(MainActivity.class.getSimpleName(), "==============\nPostActivity - onCreate\n===============");
@@ -62,15 +65,14 @@ public class PostActivity extends AppCompatActivity {
 
         PostImageReference = FirebaseStorage.getInstance().getReference();
         UserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(current_user_id);
+
 //        PostsRef = FirebaseDatabase.getInstance().getReference().child("Posts").child(current_user_id);
         PostsRef = FirebaseDatabase.getInstance().getReference().child("Posts");
-
 
         SelectPostImage = findViewById(R.id.UploadImage);
         UpdatePostButton = findViewById(R.id.UpdatePostButton);
         PostDescription = findViewById(R.id.PostText);
         //loadingbar...
-
 
         SelectPostImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,18 +127,23 @@ public class PostActivity extends AppCompatActivity {
         postRandomName = saveCurrentDate + saveCurrentTime;
 
         StorageReference filePath = PostImageReference.child("Posts Images").child(ImageUri.getLastPathSegment() + postRandomName + ".jpg");
+        Log.d(PostActivity.class.getSimpleName(), "filePath: "+ filePath.toString() + "\n");
+
+        // By Tony
+        image_url_detail = ImageUri.getLastPathSegment() + postRandomName + ".jpg";
+
         filePath.putFile(ImageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                 if(task.isSuccessful()){
                     // Version update!
                     downloadUrl = task.getResult().getStorage().getDownloadUrl().toString();
+
                     Log.d(SetupActivity.class.getSimpleName(), "StoringImageToFirebaseStorage - onComplete, the downloadUrl is [" + downloadUrl+ "]");
                     //downloadUrl = task.getResult().getDownloadUrl().toString();
 
                     Toast.makeText(PostActivity.this, "Successful! The new post is added.", Toast.LENGTH_SHORT).show();
 
-                    // comment for now
                     SavingPostInformationToDatabase();
                 }else {
                     String message = task.getException().getMessage();
@@ -174,6 +181,8 @@ public class PostActivity extends AppCompatActivity {
                     //postsMap.put("profileimage", userProfileImage);
                     postsMap.put("fullname", userFullName);
 
+                    // By Tony
+                    postsMap.put("image_url", image_url_detail);
 
                     // By Tony no used
                     //public Posts(String uid, String time, String date, String postimage, String description, String profileimage, String fullname)
@@ -181,6 +190,7 @@ public class PostActivity extends AppCompatActivity {
 
                     Log.d(PostActivity.class.getSimpleName(), "postRandomName :[ "+ postRandomName + "]\n");
                     Log.d(PostActivity.class.getSimpleName(), "current_user_id + postRandomName :[ "+ current_user_id + postRandomName + "]\n");
+
 
                     // userID + date + time
                     // Example: ClUQj4aEolO9JuZPid6iIAibA9n210-November-201915:02
@@ -224,6 +234,9 @@ public class PostActivity extends AppCompatActivity {
         if(requestCode == Gallery_Pick && resultCode == RESULT_OK && data != null){
             ImageUri = data.getData();
             SelectPostImage.setImageURI(ImageUri);
+
+            // by Tony
+            image_url_detail = ImageUri.toString();
         }
         Log.d(PostActivity.class.getSimpleName(), "onActivityResult - finish\n");
     }

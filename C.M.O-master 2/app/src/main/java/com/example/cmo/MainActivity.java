@@ -3,6 +3,7 @@ package com.example.cmo;
 import android.content.Context;
 import android.content.Intent;
 
+import android.net.Uri;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -17,11 +18,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 //import com.google.firebase.ml.vision.common.FirebaseVisionImage; // doesn't work...
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity
@@ -42,9 +46,12 @@ public class MainActivity extends AppCompatActivity
     private FirebaseAuth mAuth;
     private DatabaseReference UsersRef, PostsRef;
 
+    // by tony
+    private FirebaseStorage storage = FirebaseStorage.getInstance();
+    private StorageReference storageRef = storage.getReference();
+
+
     //private FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(bitmap);
-
-
 
     String currentUserID;
 
@@ -60,6 +67,9 @@ public class MainActivity extends AppCompatActivity
         //currentUserID = mAuth.getCurrentUser().getUid();
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         PostsRef = FirebaseDatabase.getInstance().getReference().child("Posts");
+
+        // By Tony
+//        ImageRef = FirebaseDatabase.getInstance().getReference().child("Image_urls");
 
 
         //mToolbar = (Toolbar) findViewById(R.id.main_page_toolbar);
@@ -147,7 +157,6 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-
         DisplayAllUsersPosts();
     }
 
@@ -165,7 +174,14 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     protected void populateViewHolder(PostsViewHolder viewHolder, Posts model, int position)
                     {
+                        Log.d(MainActivity.class.getSimpleName(), "MainActivity - populateViewHolder");
                         final String PostKey = getRef(position).getKey();
+
+
+                        //String detail = model.getUid() + model.getDate() + model.getTime();
+                        //DatabaseReference user_detail = PostsRef.child("Posts").child(detail);
+                        //String user_id = user_detail.child("postimage").toString();
+                        String img_url = model.getImage_url();
 
                         viewHolder.setFullname(model.getFullname());
                         viewHolder.setTime(model.getTime());
@@ -174,7 +190,8 @@ public class MainActivity extends AppCompatActivity
 
                         viewHolder.setProfileimage(getApplicationContext(), model.getProfileimage());
 
-                        viewHolder.setPostimage(getApplicationContext(), model.getPostimage());
+//                        viewHolder.setPostimage(getApplicationContext(), model.getPostimage());
+                        viewHolder.setPostimage(getApplicationContext(), img_url);
 
                         viewHolder.mView.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -193,7 +210,6 @@ public class MainActivity extends AppCompatActivity
     {
         View mView;
         DatabaseReference PostsRef_ = FirebaseDatabase.getInstance().getReference().child("Posts");
-
 
         public PostsViewHolder(View itemView)
         {
@@ -236,16 +252,43 @@ public class MainActivity extends AppCompatActivity
             PostDescription.setText(description);
         }
 
-        public void setPostimage(Context ctx1,  String postimage)
+        public void setPostimage(Context ctx1, String postimage)
         {
-            ImageView PostImage = (ImageView) mView.findViewById(R.id.post_image);
-
+            Log.d(MainActivity.class.getSimpleName(), "MainActivity - setPostimage");
+            //ImageView PostImage = (ImageView) mView.findViewById(R.id.post_image);
 //            Picasso.with(ctx1).load(postimage).into(PostImage);
-            Log.d(MainActivity.class.getSimpleName(), "==============\npostimage: [" + postimage + "\n===============");
-            Picasso.get().load(postimage).into(PostImage);
+            //Log.d(MainActivity.class.getSimpleName(), "==============\npostimagee: [" + postimage + "]\n===============");
+
+            //==================================================================
+
+//            // by website
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReference().child("Posts Images").child(postimage);
+            storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    String img_uri = uri.toString();
+                    Log.d(MainActivity.class.getSimpleName(), "MainActivity - setPostimage - onSuccess --> " + img_uri + "\n");
+                    ImageView PostImage = (ImageView) mView.findViewById(R.id.post_image);
+                    Picasso.get().load(img_uri).into(PostImage);
+                }
+            });
+
+//            // useless code
+//            StorageReference gsReference = storage.getReferenceFromUrl(storageRef.toString());
+//            Log.d(MainActivity.class.getSimpleName(), "gsReference: [" + storageRef.toString() + "]\n===============");
+
+            Log.d(MainActivity.class.getSimpleName(), "==============\nstorageRef: [" + storageRef.toString() + "]\n===============");
+
+            //==================================================================
+
+            // works, but hard-coding
+//            String str = "https://firebasestorage.googleapis.com/v0/b/cmofirebaseproject.appspot.com/o/Posts%20Images%2Fimage%3A8810-November-201900%3A48.jpg?alt=media&token=c1d6471d-2426-4614-aea1-dbc238551ede";
+//            Picasso.get().load(str).into(PostImage);
+            //Picasso.get().load(postimage).into(PostImage);
+
         }
     }
-
 
 
     private void SendUserToPostActivity()
