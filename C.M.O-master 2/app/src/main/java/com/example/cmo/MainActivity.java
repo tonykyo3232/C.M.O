@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -17,76 +19,52 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.cmo.Utils.BottomNavigationViewHelper;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-//import com.google.firebase.ml.vision.common.FirebaseVisionImage; // doesn't work...
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity
 {
-    //private NavigationView navigationView;
-    //private DrawerLayout drawerLayout;
-    //private ActionBarDrawerToggle actionBarDrawerToggle;
     private RecyclerView postList;
-    //private Toolbar mToolbar;
-
     private Button LogoutButton; // custom design...
-
-
-    private ImageView NavProfileImage;
-    private TextView NavProfileUserName;
     private ImageButton AddNewPostButton;
-
     private FirebaseAuth mAuth;
     private DatabaseReference UsersRef, PostsRef;
 
     // by tony
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private StorageReference storageRef = storage.getReference();
-
-
-    //private FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(bitmap);
-
-    String currentUserID;
-
+    private Context mContext = MainActivity.this;
+    private static final int ACTIVITY_NUM = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        Log.d(MainActivity.class.getSimpleName(), "MainActivity - onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //================
+        Log.d(MainActivity.class.getSimpleName(), "MainActivity - onCreate: before setupBottomNavigationView");
+        setupBottomNavigationView();
+        Log.d(MainActivity.class.getSimpleName(), "MainActivity - onCreate: after setupBottomNavigationView");
+        //================
 
         mAuth = FirebaseAuth.getInstance();
         //currentUserID = mAuth.getCurrentUser().getUid();
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         PostsRef = FirebaseDatabase.getInstance().getReference().child("Posts");
 
-        // By Tony
-//        ImageRef = FirebaseDatabase.getInstance().getReference().child("Image_urls");
-
-
-        //mToolbar = (Toolbar) findViewById(R.id.main_page_toolbar);
-        //setSupportActionBar(mToolbar);
-        //getSupportActionBar().setTitle("Home");
-
-
         AddNewPostButton = (ImageButton) findViewById(R.id.add_new_post_button);
         LogoutButton = (Button) findViewById (R.id.logout_button);
-
-        //drawerLayout = (DrawerLayout) findViewById(R.id.drawable_layout);
-        //actionBarDrawerToggle = new ActionBarDrawerToggle(MainActivity.this, drawerLayout, R.string.drawer_open, R.string.drawer_close);
-        //drawerLayout.addDrawerListener(actionBarDrawerToggle);
-        //actionBarDrawerToggle.syncState();
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //navigationView = (NavigationView) findViewById(R.id.navigation_view);
-
 
         postList = (RecyclerView) findViewById(R.id.all_users_post_list);
         postList.setHasFixedSize(true);
@@ -95,50 +73,6 @@ public class MainActivity extends AppCompatActivity
         linearLayoutManager.setStackFromEnd(true);
         postList.setLayoutManager(linearLayoutManager);
 
-
-        //View navView = navigationView.inflateHeaderView(R.layout.navigation_header);
-        //NavProfileImage = (CircleImageView) navView.findViewById(R.id.nav_profile_image);
-        //NavProfileUserName = (TextView) navView.findViewById(R.id.nav_user_full_name);
-
-
-//        UsersRef.child(currentUserID).addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot)
-//            {
-//                if(dataSnapshot.exists())
-//                {
-//                    if(dataSnapshot.hasChild("fullname"))
-//                    {
-//                        String fullname = dataSnapshot.child("fullname").getValue().toString();
-//                        NavProfileUserName.setText(fullname);
-//                    }
-//                    if(dataSnapshot.hasChild("profileimage"))
-//                    {
-//                        String image = dataSnapshot.child("profileimage").getValue().toString();
-//                        Picasso.with(MainActivity.this).load(image).placeholder(R.drawable.profile).into(NavProfileImage);
-//                    }
-//                    else
-//                    {
-//                        Toast.makeText(MainActivity.this, "Profile name do not exists...", Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-
-
-//        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem item)
-//            {
-//                UserMenuSelector(item);
-//                return false;
-//            }
-//        });
 
         LogoutButton.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -156,7 +90,6 @@ public class MainActivity extends AppCompatActivity
                 SendUserToPostActivity();
             }
         });
-
         DisplayAllUsersPosts();
     }
 
@@ -176,11 +109,6 @@ public class MainActivity extends AppCompatActivity
                     {
                         Log.d(MainActivity.class.getSimpleName(), "MainActivity - populateViewHolder");
                         final String PostKey = getRef(position).getKey();
-
-
-                        //String detail = model.getUid() + model.getDate() + model.getTime();
-                        //DatabaseReference user_detail = PostsRef.child("Posts").child(detail);
-                        //String user_id = user_detail.child("postimage").toString();
                         String img_url = model.getImage_url();
 
                         viewHolder.setFullname(model.getFullname());
@@ -188,11 +116,11 @@ public class MainActivity extends AppCompatActivity
                         viewHolder.setDate(model.getDate());
                         viewHolder.setDescription(model.getDescription());
                         viewHolder.setProfileimage(getApplicationContext(), model.getProfileimage());
-//                        viewHolder.setPostimage(getApplicationContext(), model.getPostimage());
 
                         // new
                         viewHolder.setPostLocation(model.getLocation());
                         viewHolder.setPostimage(getApplicationContext(), img_url);
+                        // viewHolder.setPostimage(getApplicationContext(), model.getPostimage());
 
                         viewHolder.mView.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -210,7 +138,6 @@ public class MainActivity extends AppCompatActivity
     public static class PostsViewHolder extends RecyclerView.ViewHolder
     {
         View mView;
-        DatabaseReference PostsRef_ = FirebaseDatabase.getInstance().getReference().child("Posts");
 
         public PostsViewHolder(View itemView)
         {
@@ -221,7 +148,6 @@ public class MainActivity extends AppCompatActivity
         public void setFullname(String fullname)
         {
             TextView username = (TextView) mView.findViewById(R.id.post_user_name);
-//            username.setText("Tony Lee");
             username.setText(fullname);
         }
 
@@ -241,27 +167,20 @@ public class MainActivity extends AppCompatActivity
         public void setDate(String date)
         {
             TextView PostDate = (TextView) mView.findViewById(R.id.post_date);
-//            PostDate.setText("    " + "11/10/2019");
             PostDate.setText("  " + date);
         }
 
         public void setDescription(String description)
         {
             TextView PostDescription = (TextView) mView.findViewById(R.id.post_description);
-//            PostDescription.setText("This is a post...");
             PostDescription.setText(description);
         }
 
         public void setPostimage(Context ctx1, String postimage)
         {
             Log.d(MainActivity.class.getSimpleName(), "MainActivity - setPostimage");
-            //ImageView PostImage = (ImageView) mView.findViewById(R.id.post_image);
-//            Picasso.with(ctx1).load(postimage).into(PostImage);
-            //Log.d(MainActivity.class.getSimpleName(), "==============\npostimagee: [" + postimage + "]\n===============");
 
-            //==================================================================
-
-//            // by website
+            // by website
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference().child("Posts Images").child(postimage);
             storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -276,19 +195,7 @@ public class MainActivity extends AppCompatActivity
                 }
             });
 
-//            // useless code
-//            StorageReference gsReference = storage.getReferenceFromUrl(storageRef.toString());
-//            Log.d(MainActivity.class.getSimpleName(), "gsReference: [" + storageRef.toString() + "]\n===============");
-
             Log.d(MainActivity.class.getSimpleName(), "==============\nstorageRef: [" + storageRef.toString() + "]\n===============");
-
-            //==================================================================
-
-            // works, but hard-coding
-//            String str = "https://firebasestorage.googleapis.com/v0/b/cmofirebaseproject.appspot.com/o/Posts%20Images%2Fimage%3A8810-November-201900%3A48.jpg?alt=media&token=c1d6471d-2426-4614-aea1-dbc238551ede";
-//            Picasso.get().load(str).into(PostImage);
-            //Picasso.get().load(postimage).into(PostImage);
-
         }
 
         // new
@@ -298,7 +205,6 @@ public class MainActivity extends AppCompatActivity
             TextView PostLocation = (TextView) mView.findViewById(R.id.post_location);
             PostLocation.setText(" \n" + location);
         }
-
     }
 
     private void SendUserToPostActivity()
@@ -307,7 +213,24 @@ public class MainActivity extends AppCompatActivity
         startActivity(addNewPostIntent);
     }
 
+    // Bottom navigation view set up
+    private void setupBottomNavigationView()
+    {
+        Log.d(MainActivity.class.getSimpleName(), "MainActivity - setupBottomNavigationView");
+        BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
+        BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
 
+        BottomNavigationViewHelper.enableNavigation(mContext, bottomNavigationViewEx);
+
+        Menu menu = bottomNavigationViewEx.getMenu();
+        MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
+        menuItem.setChecked(true);
+
+
+//        Intent intent1 = new Intent(MainActivity.this, MainActivity.class);
+//        startActivity(intent1);
+
+    }
 
     @Override
     protected void onStart()
@@ -348,6 +271,7 @@ public class MainActivity extends AppCompatActivity
 //            }
 //        });
 //    }
+
 
     private void SendUserToSetupActivity()
     {
