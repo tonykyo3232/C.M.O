@@ -1,13 +1,14 @@
-package com.example.cmo;
+package com.example.cmo.Home;
 
 import android.content.Context;
 import android.content.Intent;
 
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -18,22 +19,26 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
+import com.example.cmo.Account.LoginActivity;
+import com.example.cmo.R;
+import com.example.cmo.Account.SetupActivity;
+import com.example.cmo.Utils.BottomNavigationViewHelper;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-//import com.google.firebase.ml.vision.common.FirebaseVisionImage; // doesn't work...
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Comment;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -56,13 +61,13 @@ public class MainActivity extends AppCompatActivity
     // by tony
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private StorageReference storageRef = storage.getReference();
-
+    private Context mContext = MainActivity.this;
+    private static final int ACTIVITY_NUM = 0;
 
     //private FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(bitmap);
 
     String currentUserID;
     Boolean LikeChecker = false;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -70,12 +75,19 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //================
+        Log.d(MainActivity.class.getSimpleName(), "MainActivity - onCreate: before setupBottomNavigationView");
+        setupBottomNavigationView();
+        Log.d(MainActivity.class.getSimpleName(), "MainActivity - onCreate: after setupBottomNavigationView");
+        setUpViewPager();
+        //================
 
         mAuth = FirebaseAuth.getInstance();
-        currentUserID = mAuth.getCurrentUser().getUid();
+        //currentUserID = mAuth.getCurrentUser().getUid();
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         PostsRef = FirebaseDatabase.getInstance().getReference().child("Posts");
         LikesRef = FirebaseDatabase.getInstance().getReference().child("Likes");
+
 
         // By Tony
 //        ImageRef = FirebaseDatabase.getInstance().getReference().child("Image_urls");
@@ -169,6 +181,21 @@ public class MainActivity extends AppCompatActivity
         DisplayAllUsersPosts();
     }
 
+
+    private void setUpViewPager(){
+        SectionPagerAdaptor adaptor = new SectionPagerAdaptor(getSupportFragmentManager(), 0);
+        adaptor.addFragment(new HomeFragment());
+        adaptor.addFragment(new PostFragment());
+        ViewPager viewPager = (ViewPager) findViewById(R.id.container);
+        viewPager.setAdapter(adaptor);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
+
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_action_home);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_action_add_post);
+    }
+
     private void DisplayAllUsersPosts()
     {
         FirebaseRecyclerAdapter<Posts, PostsViewHolder> firebaseRecyclerAdapter =
@@ -199,11 +226,10 @@ public class MainActivity extends AppCompatActivity
                         viewHolder.setProfileimage(getApplicationContext(), model.getProfileimage());
 //                        viewHolder.setPostimage(getApplicationContext(), model.getPostimage());
 
-                        viewHolder.setLikeButtonStatus(PostKey);
-
                         // new
                         viewHolder.setPostLocation(model.getLocation());
                         viewHolder.setPostimage(getApplicationContext(), img_url);
+                        viewHolder.setLikeButtonStatus(PostKey);
 
                         viewHolder.mView.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -213,7 +239,6 @@ public class MainActivity extends AppCompatActivity
                                 startActivity(clickPostIntent);
                             }
                         });
-
 
                         viewHolder.LikePostButton.setOnClickListener(new View.OnClickListener(){
                             @Override
@@ -251,6 +276,7 @@ public class MainActivity extends AppCompatActivity
                                 });
                             }
                         });
+
                     }
                 };
         postList.setAdapter(firebaseRecyclerAdapter);
@@ -266,7 +292,6 @@ public class MainActivity extends AppCompatActivity
         int countLikes;
         String currentUserId;
         DatabaseReference LikesRef;
-
 
         public PostsViewHolder(View itemView)
         {
@@ -345,6 +370,8 @@ public class MainActivity extends AppCompatActivity
         public void setPostimage(Context ctx1, String postimage)
         {
             Log.d(MainActivity.class.getSimpleName(), "MainActivity - setPostimage");
+            Log.d(MainActivity.class.getSimpleName(), "postimage: " + postimage + "\n");
+
             //ImageView PostImage = (ImageView) mView.findViewById(R.id.post_image);
 //            Picasso.with(ctx1).load(postimage).into(PostImage);
             //Log.d(MainActivity.class.getSimpleName(), "==============\npostimagee: [" + postimage + "]\n===============");
@@ -382,7 +409,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         // new
-        void setPostLocation(String location)
+        public void setPostLocation(String location)
         {
             Log.d(MainActivity.class.getSimpleName(), "setPostLocation - " + location);
             TextView PostLocation = (TextView) mView.findViewById(R.id.post_location);
@@ -397,6 +424,24 @@ public class MainActivity extends AppCompatActivity
         startActivity(addNewPostIntent);
     }
 
+    // Bottom navigation view set up
+    private void setupBottomNavigationView()
+    {
+        Log.d(MainActivity.class.getSimpleName(), "MainActivity - setupBottomNavigationView");
+        BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
+        BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
+
+        BottomNavigationViewHelper.enableNavigation(mContext, bottomNavigationViewEx);
+
+        Menu menu = bottomNavigationViewEx.getMenu();
+        MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
+        menuItem.setChecked(true);
+
+
+//        Intent intent1 = new Intent(MainActivity.this, MainActivity.class);
+//        startActivity(intent1);
+
+    }
 
 
     @Override

@@ -27,4 +27,6 @@
     <string name="post">Post</string>
     <string name="posting_to_c_m_o">Posting to C.M.O</string>
     <string name="location">Location</string>
+<!--    <string name = "edit_profile">Edit Profile</string>-->
+<!--    <string name = "sign_out">Sign Out</string>-->
 </resources>

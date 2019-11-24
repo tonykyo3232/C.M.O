@@ -1,0 +1,39 @@
+<!-- Note: Layout file going to be on bottom of the home_activity screen
+            and display navigation bar -->
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Note: Height of the NavigationBar is 50dp...NEED TO FIX TO Helper guide-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true">
+
+        <!-- Note:
+                Created a menu directory in res folder to display menu icons
+                    on nav bar.
+                Downloaded github to customize the nav bar.-->
+        <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
+            android:id="@+id/bottomNavViewBar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:menu="@menu/bottom_navigation_menu">
+        </com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx>
+
+        <!-- Old Nav Bar: Source V4-->
+        <!--        <com.google.android.material.navigation.NavigationView-->
+        <!--            android:id="@+id/bottomNavViewBar"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="match_parent"-->
+        <!--            android:background="@drawable/white_limbogreen_border_top"-->
+        <!--            app:menu="@menu/bottom_navigation_menu">-->
+        <!--        </com.google.android.material.navigation.NavigationView>-->
+
+
+    </RelativeLayout>
+
+
+    <!-- Note: Insert this xml into home activity -->
+
+
+</merge>

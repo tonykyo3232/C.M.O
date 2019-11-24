@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/ic_action_house"
+        android:icon="@drawable/ic_action_home"
+        android:title=""
+        android:visible="true">
+    </item>
+
+    <item
+        android:id="@+id/ic_action_search"
+        android:icon="@drawable/ic_action_search"
+        android:title="">
+    </item>
+
+    <item
+        android:id="@+id/ic_action_notification"
+        android:icon="@drawable/ic_action_notification"
+        android:title="">
+    </item>
+
+    <item
+        android:id="@+id/ic_action_profile"
+        android:icon="@drawable/ic_action_profile"
+        android:title="">
+    </item>
+</menu>

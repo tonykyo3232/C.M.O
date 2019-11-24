@@ -1,0 +1,33 @@
+<!-- Note: Layout file going to be on top of the home_activity screen
+            and contains tabs -->
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Note: Height of the TabLayOut is 50dp...NEED TO FIX TO Helper guide-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Note: NEED TO FIX TO TabLayout, not Toolbar.
+                        Duc added the color-->
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+            >
+            </com.google.android.material.tabs.TabLayout>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+    </RelativeLayout>
+
+
+    <!-- Note: Insert this xml into home activity -->
+
+
+</merge>
