@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cmo.Home.ClickPostActivity;
+import com.example.cmo.Home.CommentsActivity;
 import com.example.cmo.Home.MainActivity;
 import com.example.cmo.Home.Posts;
 import com.example.cmo.R;
@@ -181,6 +182,15 @@ public class ProfileActivity extends AppCompatActivity {
                                     Intent clickPostIntent = new Intent(ProfileActivity.this, ClickPostActivity.class);
                                     clickPostIntent.putExtra("PostKey", PostKey);
                                     startActivity(clickPostIntent);
+                                }
+                            });
+
+                            viewHolder.CommentPostButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent commentsInent = new Intent(ProfileActivity.this, CommentsActivity.class);
+                                    commentsInent.putExtra("PostKey",PostKey);
+                                    startActivity(commentsInent);
                                 }
                             });
 
