@@ -1,4 +1,4 @@
-package com.example.cmo;
+package com.example.cmo.Search;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.cmo.R;
 import com.example.cmo.Utils.BottomNavigationViewHelper;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
@@ -21,7 +22,6 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_search);
         setContentView(R.layout.activity_main);
-
 
         setupBottomNavigationView(); // error!
     }

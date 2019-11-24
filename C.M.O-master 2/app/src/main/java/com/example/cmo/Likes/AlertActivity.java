@@ -1,4 +1,4 @@
-package com.example.cmo;
+package com.example.cmo.Likes;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.cmo.R;
+import com.example.cmo.Search.SearchActivity;
 import com.example.cmo.Utils.BottomNavigationViewHelper;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 

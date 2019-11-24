@@ -1,10 +1,9 @@
 package com.example.cmo.Utils;
 
 
-import com.example.cmo.AlertActivity;
-import com.example.cmo.MainActivity;
-import com.example.cmo.PostActivity;
-import com.example.cmo.ProfileActivity;
+import com.example.cmo.Likes.AlertActivity;
+import com.example.cmo.Home.MainActivity;
+import com.example.cmo.Profile.ProfileActivity;
 import com.example.cmo.R;
 
 import android.content.Context;
@@ -13,8 +12,7 @@ import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 
-import com.example.cmo.R;
-import com.example.cmo.SearchActivity;
+import com.example.cmo.Search.SearchActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 

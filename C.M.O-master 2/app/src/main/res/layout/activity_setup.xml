@@ -11,8 +11,8 @@
         android:layout_width="157dp"
         android:layout_height="167dp"
         android:layout_marginLeft="130dp"
-        app:srcCompat="@mipmap/default_profile"
-        tools:srcCompat="@mipmap/default_profile" />
+        app:srcCompat="@mipmap/img_default_profile"
+        tools:srcCompat="@mipmap/img_default_profile" />
 
     <EditText
         android:id="@+id/setup_username"

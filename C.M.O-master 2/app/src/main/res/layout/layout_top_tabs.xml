@@ -14,12 +14,13 @@
 
             <!-- Note: NEED TO FIX TO TabLayout, not Toolbar.
                         Duc added the color-->
-            <androidx.appcompat.widget.Toolbar
+
+            <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
             >
-            </androidx.appcompat.widget.Toolbar>
+            </com.google.android.material.tabs.TabLayout>
 
         </com.google.android.material.appbar.AppBarLayout>
 

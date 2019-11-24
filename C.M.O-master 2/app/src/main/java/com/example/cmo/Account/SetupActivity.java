@@ -1,6 +1,5 @@
-package com.example.cmo;
+package com.example.cmo.Account;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,7 +14,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.cmo.Home.MainActivity;
+import com.example.cmo.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -31,7 +33,6 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.HashMap;
-import java.util.Set;
 
 public class SetupActivity extends AppCompatActivity {
 
@@ -43,6 +44,10 @@ public class SetupActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference UsersRef;
     private StorageReference UserProfileImageRef;
+
+    // Bt Tony
+    private StorageReference storageRef;
+    private FirebaseStorage storage;
 
     String currentUserID;
     final static int Gallery_Pick = 1;
@@ -56,12 +61,19 @@ public class SetupActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         currentUserID = mAuth.getCurrentUser().getUid();
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserID);
+
+        // By Tony
+        storage = FirebaseStorage.getInstance();
+
+        // Tony: trying to work on
         UserProfileImageRef = FirebaseStorage.getInstance().getReference().child("Profile Images");
 
         UserName = (EditText) findViewById(R.id.setup_username);
         FullName = (EditText) findViewById(R.id.setup_full_name);
         Country = (EditText) findViewById(R.id.setup_country);
         SaveInformation = (Button) findViewById(R.id.setup_button);
+
+        // tony: trying to work on
         ProfileImage = (ImageView) findViewById(R.id.setup_image);
 
         SaveInformation.setOnClickListener(new View.OnClickListener(){
@@ -89,6 +101,7 @@ public class SetupActivity extends AppCompatActivity {
                     //save profile image failed (video 15)
                     //String image = dataSnapshot.child("profileimage").getValue().toString();
                     //Picasso.get().load(image).placeholder(R.drawable.profile).into(ProfileImage);
+                    Log.d(SetupActivity.class.getSimpleName(), "dataSnapshot.getChildren().toString(); => " + dataSnapshot.getChildren().toString());
                     Log.d(SetupActivity.class.getSimpleName(), "==============\nSetupActivity - onDataChange - if(dataSnapshot.exists()) == TRUE\n===============");
                 }
             }
@@ -98,6 +111,28 @@ public class SetupActivity extends AppCompatActivity {
 
             }
         });
+
+        // By Tony
+        // ******************************************
+        if (storage.getReference() != null)
+        {
+            storageRef = storage.getReference().child("Profile Images").child(currentUserID + ".jpg");
+
+            Log.d(SetupActivity.class.getSimpleName(), "currentUserID: " + currentUserID + ".jpg");
+
+            storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Log.d(SetupActivity.class.getSimpleName(), "==============\n[Before] onDataChange - onSuccess \n===============");
+                    String img_uri = uri.toString();
+                    Log.d(SetupActivity.class.getSimpleName(), "img_uri: " + img_uri + "\n");
+                    ImageView PostImage = (ImageView) findViewById(R.id.setup_image);
+                    Picasso.get().load(img_uri).into(PostImage);
+                    Log.d(SetupActivity.class.getSimpleName(), "==============\n[After] onDataChange - onSuccess \n===============");
+                }
+            });
+        }
+        // ******************************************
     }
 
     @Override
@@ -106,6 +141,9 @@ public class SetupActivity extends AppCompatActivity {
 
         if(requestCode == Gallery_Pick && resultCode == RESULT_OK && data != null){
             Uri ImageUri = data.getData();
+
+//            // By Tony
+//            ProfileImage.setImageURI(ImageUri);
 
             CropImage.activity()
                     .setGuidelines(CropImageView.Guidelines.ON)
@@ -126,7 +164,11 @@ public class SetupActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                         if(task.isSuccessful()){
                             Toast.makeText(SetupActivity.this, "image stored to firebase",Toast.LENGTH_SHORT).show();
+
+                            // ==============================================================================================
                             final String downloadUrl = task.getResult().getUploadSessionUri().toString();
+                            Log.d(SetupActivity.class.getSimpleName(), "downloadUrl: " + downloadUrl + "\n");
+
 
                             UsersRef.child("profileimage").setValue(downloadUrl)
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -135,7 +177,6 @@ public class SetupActivity extends AppCompatActivity {
                                             if(task.isSuccessful()){
                                                 Intent selfIntent = new Intent(SetupActivity.this, SetupActivity.class);
                                                 startActivity(selfIntent);
-
                                                 Toast.makeText(SetupActivity.this, "Profile image store to firebase",Toast.LENGTH_SHORT).show();
                                             }
                                             else{
@@ -144,6 +185,8 @@ public class SetupActivity extends AppCompatActivity {
                                             }
                                         }
                                     });
+                            // ==============================================================================================
+
                         }
                     }
                 });
