@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_margin="7dp"
+        android:background="@color/mainBackground"
         >
 
         <LinearLayout
