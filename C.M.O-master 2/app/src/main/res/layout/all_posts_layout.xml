@@ -9,9 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginBottom="3dp"
+        android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
-        android:background="@drawable/post_border"
+        android:background="@color/mainBackground"
         android:layout_marginRight="10dp">
 
         <LinearLayout
@@ -29,7 +29,8 @@
                 android:background="@drawable/profile"
                 android:scaleType="centerCrop"
                 app:srcCompat="@mipmap/img_default_profile"
-                android:contentDescription="@string/todo"></ImageView>
+                android:contentDescription="@string/todo">
+            </ImageView>
 
             <LinearLayout
                 android:layout_width="match_parent"
