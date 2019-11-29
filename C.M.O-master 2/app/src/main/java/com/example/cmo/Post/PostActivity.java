@@ -57,6 +57,9 @@ public class PostActivity extends AppCompatActivity {
 
     private String saveCurrentDate, saveCurrentTime, postRandomName, downloadUrl, current_user_id;
 
+    //
+    private long coutPosts = 0;
+
     // By Tony
     private String image_url_detail, Location;
     private Context mContext = PostActivity.this;
@@ -192,6 +195,24 @@ public class PostActivity extends AppCompatActivity {
     private void SavingPostInformationToDatabase() {
         Log.d(PostActivity.class.getSimpleName(), "SavingPostInformationToDatabase\n");
 
+        //descending order
+        PostsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    coutPosts = dataSnapshot.getChildrenCount();
+                }
+                else{
+                    coutPosts = 0;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
 //        UserRef.child(current_user_id).addValueEventListener(new ValueEventListener() {
         UserRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -220,6 +241,9 @@ public class PostActivity extends AppCompatActivity {
                     // By Tony
                     postsMap.put("image_url", image_url_detail);
                     postsMap.put("location", Location);
+
+                    //descending order
+                    postsMap.put("counter",coutPosts);
 
                     // By Tony no used
                     //public Posts(String uid, String time, String date, String postimage, String description, String profileimage, String fullname)
