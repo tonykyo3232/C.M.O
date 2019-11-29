@@ -1,21 +1,27 @@
-package com.example.cmo.Home;
+package com.example.cmo.Post;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.example.cmo.Home.MainActivity;
+import com.example.cmo.Profile.ProfileActivity;
 import com.example.cmo.R;
 import com.example.cmo.Account.SetupActivity;
+import com.example.cmo.Utils.BottomNavigationViewHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,6 +33,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -52,20 +59,20 @@ public class PostActivity extends AppCompatActivity {
 
     // By Tony
     private String image_url_detail, Location;
-//    private Context mContext = PostActivity.this;
-//    private static final int ACTIVITY_NUM = 2;
+    private Context mContext = PostActivity.this;
+    private static final int ACTIVITY_NUM = 2;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(MainActivity.class.getSimpleName(), "==============\nPostActivity - onCreate\n===============");
+        Log.d(PostActivity.class.getSimpleName(), "==============\nPostActivity - onCreate\n===============");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
 //        setContentView(R.layout.activity_main);
 
-        //=================
-//        setupBottomNavigationView();
-        //=================
+        // new: 11/26
+        setupBottomNavigationView();
+
         mAuth = FirebaseAuth.getInstance();
         current_user_id = mAuth.getCurrentUser().getUid();
 
@@ -98,22 +105,24 @@ public class PostActivity extends AppCompatActivity {
                 ValidatePostInfo();
             }
         });
-        Log.d(MainActivity.class.getSimpleName(), "==============\nPostActivity - onCreate - finish\n===============");
+
+        Log.d(PostActivity.class.getSimpleName(), "==============\nPostActivity - onCreate - finish\n===============");
     }
 
 
-//    // Bottom navigation view set up
-//    private void setupBottomNavigationView()
-//    {
-//        Log.d(PostActivity.class.getSimpleName(), "MainActivity - setupBottomNavigationView");
-//        BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
-//        BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
-//        BottomNavigationViewHelper.enableNavigation(mContext, bottomNavigationViewEx);
-//
-//        Menu menu = bottomNavigationViewEx.getMenu();
-//        MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
-//        menuItem.setChecked(true);
-//    }
+    // Bottom navigation view set up
+    private void setupBottomNavigationView()
+    {
+        Log.d(PostActivity.class.getSimpleName(), "ProfileActivity - setupBottomNavigationView");
+        BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
+        BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
+        BottomNavigationViewHelper.enableNavigation(mContext, bottomNavigationViewEx);
+
+        Menu menu = bottomNavigationViewEx.getMenu();
+        MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
+        menuItem.setChecked(true);
+        Log.d(ProfileActivity.class.getSimpleName(), "PostActivity - setupBottomNavigationView - finish");
+    }
 
     private void ValidatePostInfo()
     {

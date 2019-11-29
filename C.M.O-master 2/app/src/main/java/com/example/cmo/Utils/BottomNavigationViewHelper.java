@@ -3,6 +3,7 @@ package com.example.cmo.Utils;
 
 import com.example.cmo.Likes.AlertActivity;
 import com.example.cmo.Home.MainActivity;
+import com.example.cmo.Post.PostActivity;
 import com.example.cmo.Profile.ProfileActivity;
 import com.example.cmo.R;
 
@@ -44,13 +45,17 @@ public class BottomNavigationViewHelper {
                         Intent intent2 = new Intent(context, SearchActivity.class);
                         context.startActivity(intent2);
                         break;
-                    case R.id.ic_action_notification:
-                        Intent intent3 = new Intent(context, AlertActivity.class);
+                    case R.id.ic_action_add_post:
+                        Intent intent3 = new Intent(context, PostActivity.class);
                         context.startActivity(intent3);
                         break;
-                    case R.id.ic_action_profile:
-                        Intent intent4 = new Intent(context, ProfileActivity.class);
+                    case R.id.ic_action_notification:
+                        Intent intent4 = new Intent(context, AlertActivity.class);
                         context.startActivity(intent4);
+                        break;
+                    case R.id.ic_action_profile:
+                        Intent intent5 = new Intent(context, ProfileActivity.class);
+                        context.startActivity(intent5);
                         break;
                 }
                 return false;

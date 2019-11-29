@@ -22,6 +22,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.cmo.Account.LoginActivity;
+import com.example.cmo.Post.PostActivity;
+import com.example.cmo.Post.Posts;
 import com.example.cmo.R;
 import com.example.cmo.Account.SetupActivity;
 import com.example.cmo.Utils.BottomNavigationViewHelper;
@@ -170,13 +172,14 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        AddNewPostButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-                SendUserToPostActivity();
-            }
-        });
+        // comment for now
+//        AddNewPostButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v)
+//            {
+//                SendUserToPostActivity();
+//            }
+//        });
 
         DisplayAllUsersPosts();
     }

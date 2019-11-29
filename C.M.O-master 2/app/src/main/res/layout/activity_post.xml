@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/background3"
-    tools:context=".Home.PostActivity">
+    tools:context=".Post.PostActivity">
 
 
     <EditText
@@ -91,4 +90,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <include layout = "@layout/layout_bottom_navigation_view"></include>
+    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

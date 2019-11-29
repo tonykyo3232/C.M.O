@@ -1,4 +1,4 @@
-package com.example.cmo.Home;
+package com.example.cmo.Post;
 
 public class Posts
 {
