@@ -3,8 +3,6 @@ package com.example.cmo.Profile;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.accounts.AccountAuthenticatorActivity;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -25,8 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cmo.Home.ClickPostActivity;
 import com.example.cmo.Home.CommentsActivity;
-import com.example.cmo.Home.MainActivity;
-import com.example.cmo.Home.Posts;
+import com.example.cmo.Post.Posts;
 import com.example.cmo.R;
 import com.example.cmo.Utils.BottomNavigationViewHelper;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -41,19 +38,24 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.squareup.picasso.Picasso;
+import com.twitter.sdk.android.core.models.User;
 
 public class ProfileActivity extends AppCompatActivity {
 
     private Context mContext = ProfileActivity.this;
     private ProgressBar mprogressBar;
-    private static final int ACTIVITY_NUM = 3;
+//    private static final int ACTIVITY_NUM = 3;
+    private static final int ACTIVITY_NUM = 4;
+
 
     // For the posts
     private RecyclerView postList;
     private FirebaseAuth mAuth;
     private DatabaseReference UsersRef, PostsRef, LikesRef;
     private FirebaseStorage storage = FirebaseStorage.getInstance();
-    private StorageReference storageRef = storage.getReference();
+//    private StorageReference storageRef = storage.getReference();
+
+//    private StorageReference storageRefProfile = storage.getReference();
     Boolean LikeChecker = false;
     private String currentUserID, temp;
     private int tempInt;
@@ -84,6 +86,87 @@ public class ProfileActivity extends AppCompatActivity {
         linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
         postList.setLayoutManager(linearLayoutManager);
+
+
+        // try later
+        // access info for user profile image
+        FirebaseStorage storage_ = FirebaseStorage.getInstance();
+        StorageReference currentUserRef = storage_.getReference();
+        currentUserRef = currentUserRef.child("Profile Images").child(currentUserID + ".jpg");
+        Log.d(ProfileActivity.class.getSimpleName(), "find me currentUserRef: " + currentUserRef.toString());
+        // =======
+        currentUserRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Log.d(ProfileActivity.class.getSimpleName(), "find_me");
+                Log.d(ProfileActivity.class.getSimpleName(), "ProfileActivity-onCreate - onSuccess");
+                String img_uri = uri.toString();
+                Log.d(ProfileActivity.class.getSimpleName(), " find me url: " + img_uri + "\n");
+                ImageView PostImage = (ImageView) findViewById(R.id.profile_image);
+                Picasso.get().load(img_uri).into(PostImage);
+            }
+        });
+        // =======
+
+
+        // ---------------------------
+        UsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    Log.d(ProfileActivity.class.getSimpleName(), "find_me\n");
+                    Log.d(ProfileActivity.class.getSimpleName(), "onCreate - UsersRef's onDataChange");
+                    String country = userSnapshot.child("country").getValue(String.class);
+                    String fullName = userSnapshot.child("fullname").getValue(String.class);
+                    String userName = userSnapshot.child("username").getValue(String.class);
+
+                    Log.d(ProfileActivity.class.getSimpleName(), "country: " + country);
+                    Log.d(ProfileActivity.class.getSimpleName(), "\nfullname: " + fullName);
+                    Log.d(ProfileActivity.class.getSimpleName(), "\nusername: " + userName);
+
+
+                    // find the following place to put the text
+                    TextView countryText = (TextView) findViewById(R.id.display_name);
+                    TextView fullNameText = (TextView) findViewById(R.id.display_origin);
+                    TextView userNameText = (TextView) findViewById(R.id.user_name);
+
+                    // display the text to the phone screen
+                    countryText.setText(country);
+                    fullNameText.setText(fullName);
+                    userNameText.setText(userName);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+        // access the information of the current user reference
+//        DatabaseReference CurrUserCountry = UsersRef.child(currentUserID).child("country");
+//        DatabaseReference CurrUserFullname = UsersRef.child(currentUserID).child("fullname");
+//        DatabaseReference CurrUserName = UsersRef.child(currentUserID).child("username");
+//
+//        //debug message
+//        Log.d(ProfileActivity.class.getSimpleName(), "Beginning of debug \n");
+//        Log.d(ProfileActivity.class.getSimpleName(), "CurrUserCountry: " + CurrUserCountry.toString());
+//        Log.d(ProfileActivity.class.getSimpleName(), "CurrUserFullname: " + CurrUserFullname.toString());
+//        Log.d(ProfileActivity.class.getSimpleName(), "CurrUserName: " + CurrUserName.toString());
+
+
+//        // find the following place to put the text
+//        TextView countryText = (TextView) findViewById(R.id.display_name);
+//        TextView fullNameText = (TextView) findViewById(R.id.display_origin);
+//        TextView userNameText = (TextView) findViewById(R.id.user_name);
+//
+//        // display the text to the phone screen
+//        countryText.setText(CurrUserCountry.toString());
+//        fullNameText.setText(CurrUserFullname.toString());
+//        userNameText.setText(CurrUserName.toString());
+        // ---------------------------
+
 
         Log.d(ProfileActivity.class.getSimpleName(), "Before DisplayAllUsersPosts");
         DisplayAllUsersPosts();
@@ -139,7 +222,7 @@ public class ProfileActivity extends AppCompatActivity {
 //    }
 
     /**********************************
-    // functionsfor the posts
+    // functions for the posts
     **********************************/
     private void DisplayAllUsersPosts()
     {
@@ -160,22 +243,30 @@ public class ProfileActivity extends AppCompatActivity {
                         final String PostKey = getRef(position).getKey();
                         String img_url = model.getImage_url();
 
-                        Log.d(ProfileActivity.class.getSimpleName(), "currentUserID: " + currentUserID + "\n");
-                        Log.d(ProfileActivity.class.getSimpleName(), "model.getUid(): " + model.getUid() + "\n");
-                        temp = model.getUid();
+//                        Log.d(ProfileActivity.class.getSimpleName(), "currentUserID: " + currentUserID + "\n");
+//                        Log.d(ProfileActivity.class.getSimpleName(), "model.getUid(): " + model.getUid() + "\n");
+//                        temp = model.getUid();
+
 //                        if(model.getUid().equals(currentUserID))
 //                        {
-                            Log.d(ProfileActivity.class.getSimpleName(), "[ if(model.getUid() == currentUserID) ]:" + position);
-                            isUserPost = true;
+//                            Log.d(ProfileActivity.class.getSimpleName(), "[ if(model.getUid() == currentUserID) ]:" + position);
+//                            isUserPost = true;
+
                             viewHolder.setFullname(model.getFullname());
                             viewHolder.setTime(model.getTime());
                             viewHolder.setDate(model.getDate());
                             viewHolder.setDescription(model.getDescription());
-                            viewHolder.setProfileimage(getApplicationContext(), model.getProfileimage());
-                            viewHolder.setPostLocation(model.getLocation());
-                            viewHolder.setPostimage(getApplicationContext(), img_url);
-                            viewHolder.setLikeButtonStatus(PostKey);
 
+//                            viewHolder.setPostLocation(model.getLocation());
+
+                            viewHolder.setPostimage(getApplicationContext(), img_url);
+
+                            Log.d(ProfileActivity.class.getSimpleName(), "viewHolder.setProfileimage - before");
+//                            viewHolder.setProfileimage(getApplicationContext(), model.getProfileimage());
+                        viewHolder.setProfileimage(getApplicationContext(), model.getUid());
+                        Log.d(ProfileActivity.class.getSimpleName(), "viewHolder.setProfileimage - before - after");
+
+                            viewHolder.setLikeButtonStatus(PostKey);
                             viewHolder.mView.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -230,10 +321,12 @@ public class ProfileActivity extends AppCompatActivity {
                     } // end populateViewHolder
                 };
 //        if(isUserPost)
-        Log.d(ProfileActivity.class.getSimpleName(), "...When setAdapter...\n");
-        Log.d(ProfileActivity.class.getSimpleName(), "Position: "+ tempInt + "\n");
-        Log.d(ProfileActivity.class.getSimpleName(), "currentUserID: " + currentUserID + "\n");
-        Log.d(ProfileActivity.class.getSimpleName(), "model.getUid(): " + temp + "\n");
+
+//        Log.d(ProfileActivity.class.getSimpleName(), "...When setAdapter...\n");
+//        Log.d(ProfileActivity.class.getSimpleName(), "Position: "+ tempInt + "\n");
+//        Log.d(ProfileActivity.class.getSimpleName(), "currentUserID: " + currentUserID + "\n");
+//        Log.d(ProfileActivity.class.getSimpleName(), "model.getUid(): " + temp + "\n");
+
         postList.setAdapter(firebaseRecyclerAdapter);
     }
 
@@ -295,11 +388,35 @@ public class ProfileActivity extends AppCompatActivity {
             username.setText(fullname);
         }
 
-        public void setProfileimage(Context ctx, String profileimage)
+        public void setProfileimage(Context ctx, String userId)
         {
-//            ImageView image = (ImageView) mView.findViewById(R.id.post_image);
-//            Picasso.get().load(profileimage).into(image);
-//            Picasso.with(ctx).load(profileimage).into(image);
+            Log.d(ProfileActivity.class.getSimpleName(), "!!setProfileimage!!\n");
+
+            // by website
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRefProfile = storage.getReference();
+
+            // access info for user profile image
+            storageRefProfile = storageRefProfile.child("Profile Images").child(userId + ".jpg");
+
+            Log.d(ProfileActivity.class.getSimpleName(), "setProfileimage - before [if (storageRefProfile != null)] ...\n");
+            Log.d(ProfileActivity.class.getSimpleName(), "storageRefProfile: [ " + storageRefProfile.toString() + "]\n");
+            Log.d(ProfileActivity.class.getSimpleName(), "currentUserId: [ " + userId + "]\n");
+            // be to be careful when storageRefProfile is null reference, meaning that
+            if (storageRefProfile != null){
+                Log.d(ProfileActivity.class.getSimpleName(), "setProfileimage - INSIDE [if (storageRefProfile != null)] ...\n");
+                storageRefProfile.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Log.d(ProfileActivity.class.getSimpleName(), "setProfileimage's onSuccess\n");
+                        Log.d(ProfileActivity.class.getSimpleName(), "setProfileimage's uri.toString(): [" + uri.toString() + "]\n===============");
+                        String img_uri = uri.toString();
+                        Log.d(ProfileActivity.class.getSimpleName(), "ProfileActivity - setProfileimage's - onSuccess --> " + img_uri + "\n");
+                        ImageView PostImage = (ImageView) mView.findViewById(R.id.post_pro);
+                        Picasso.get().load(img_uri).into(PostImage); // crash
+                    }
+                });
+            }
         }
 
         public void setTime(String time)
@@ -325,13 +442,7 @@ public class ProfileActivity extends AppCompatActivity {
         public void setPostimage(Context ctx1, String postimage)
         {
             Log.d(ProfileActivity.class.getSimpleName(), "ProfileActivity - setPostimage");
-            //ImageView PostImage = (ImageView) mView.findViewById(R.id.post_image);
-//            Picasso.with(ctx1).load(postimage).into(PostImage);
-            //Log.d(MainActivity.class.getSimpleName(), "==============\npostimagee: [" + postimage + "]\n===============");
-
-            //==================================================================
-
-//            // by website
+            // by website
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference().child("Posts Images").child(postimage);
             storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -361,7 +472,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         }
 
-        // new
+        // new (forget what's for...)
         public void setPostLocation(String location)
         {
             Log.d(ProfileActivity.class.getSimpleName(), "setPostLocation - " + location);

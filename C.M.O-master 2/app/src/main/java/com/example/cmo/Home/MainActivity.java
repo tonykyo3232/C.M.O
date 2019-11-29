@@ -22,6 +22,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.cmo.Account.LoginActivity;
+import com.example.cmo.Post.PostActivity;
+import com.example.cmo.Post.Posts;
+import com.example.cmo.Profile.ProfileActivity;
 import com.example.cmo.R;
 import com.example.cmo.Account.SetupActivity;
 import com.example.cmo.Utils.BottomNavigationViewHelper;
@@ -171,13 +174,14 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        AddNewPostButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-                SendUserToPostActivity();
-            }
-        });
+        // comment for now
+//        AddNewPostButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v)
+//            {
+//                SendUserToPostActivity();
+//            }
+//        });
 
         DisplayAllUsersPosts();
     }
@@ -228,7 +232,7 @@ public class MainActivity extends AppCompatActivity
                         viewHolder.setTime(model.getTime());
                         viewHolder.setDate(model.getDate());
                         viewHolder.setDescription(model.getDescription());
-                        viewHolder.setProfileimage(getApplicationContext(), model.getProfileimage());
+                        viewHolder.setProfileimage(getApplicationContext(), model.getUid());
 //                        viewHolder.setPostimage(getApplicationContext(), model.getPostimage());
 
                         // new
@@ -354,11 +358,26 @@ public class MainActivity extends AppCompatActivity
             username.setText(fullname);
         }
 
-        public void setProfileimage(Context ctx, String profileimage)
+        public void setProfileimage(Context ctx, String userId)
         {
-//            ImageView image = (ImageView) mView.findViewById(R.id.post_image);
-//            Picasso.get().load(profileimage).into(image);
-//            Picasso.with(ctx).load(profileimage).into(image);
+            // by website
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRefProfile = storage.getReference();
+
+            // access info for user profile image
+            storageRefProfile = storageRefProfile.child("Profile Images").child(userId + ".jpg");
+
+            // be to be careful when storageRefProfile is null reference, meaning that
+            if (storageRefProfile != null){
+                storageRefProfile.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        String img_uri = uri.toString();
+                        ImageView PostImage = (ImageView) mView.findViewById(R.id.post_pro);
+                        Picasso.get().load(img_uri).into(PostImage); // crash
+                    }
+                });
+            }
         }
 
         public void setTime(String time)

@@ -16,7 +16,9 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 public class AlertActivity extends AppCompatActivity {
 
     private Context mContext = AlertActivity.this;
-    private static final int ACTIVITY_NUM = 2;
+//    private static final int ACTIVITY_NUM = 2;
+    private static final int ACTIVITY_NUM = 3;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

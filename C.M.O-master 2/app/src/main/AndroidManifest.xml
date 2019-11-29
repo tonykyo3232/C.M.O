@@ -19,6 +19,7 @@
         <activity android:name=".Profile.AccountSettingsActivity" />
         <activity android:name=".Search.SearchActivity" />
         <activity android:name=".Home.ClickPostActivity" />
+        <activity android:name=".Post.PostActivity" />
         <activity android:name=".Home.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,7 +30,6 @@
         <activity android:name=".Account.RegisterActivity" />
         <activity android:name=".Account.LoginActivity" />
         <activity android:name=".Account.SetupActivity" />
-        <activity android:name=".Home.PostActivity" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
