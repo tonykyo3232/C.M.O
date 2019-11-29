@@ -13,7 +13,6 @@
         android:layout_marginLeft="10dp"
         android:background="@color/mainBackground"
         android:layout_marginRight="10dp"
-
         >
 
         <LinearLayout
