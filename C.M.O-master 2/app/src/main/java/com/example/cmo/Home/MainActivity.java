@@ -24,7 +24,6 @@ import androidx.viewpager.widget.ViewPager;
 import com.example.cmo.Account.LoginActivity;
 import com.example.cmo.Post.PostActivity;
 import com.example.cmo.Post.Posts;
-import com.example.cmo.Profile.ProfileActivity;
 import com.example.cmo.R;
 import com.example.cmo.Account.SetupActivity;
 import com.example.cmo.Utils.BottomNavigationViewHelper;
@@ -72,6 +71,7 @@ public class MainActivity extends AppCompatActivity
 
     String currentUserID;
     Boolean LikeChecker = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

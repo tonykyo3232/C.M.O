@@ -4,65 +4,155 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/background5">
+    android:background="@mipmap/background2">
 
-    <ImageView
-        android:id="@+id/setup_image"
-        android:layout_width="157dp"
-        android:layout_height="167dp"
-        android:layout_marginLeft="130dp"
-        app:srcCompat="@mipmap/img_default_profile"
-        tools:srcCompat="@mipmap/img_default_profile" />
+    <RelativeLayout
 
-    <EditText
-        android:id="@+id/setup_username"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:gravity="start|top"
-        android:hint="username"
-        android:inputType="textMultiLine"
-        android:background="@drawable/input"
-        android:padding="15dp"
-        android:layout_below="@id/setup_image"
-        android:layout_marginTop="50dp"
-        />
-
-    <EditText
-        android:id="@+id/setup_full_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:gravity="start|top"
-        android:hint="Full Name"
-        android:inputType="textMultiLine"
-        android:background="@drawable/input"
-        android:padding="15dp"
-        android:layout_below="@id/setup_username"
-        android:layout_marginTop="50dp"
-        />
-
-    <EditText
-        android:id="@+id/setup_country"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:gravity="start|top"
-        android:hint="Country"
-        android:inputType="textMultiLine"
-        android:background="@drawable/input"
-        android:padding="15dp"
-        android:layout_below="@id/setup_full_name"
-        android:layout_marginTop="50dp"
-        />
-
-    <Button
-        android:id="@+id/setup_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/setup_country"
-        android:background="@drawable/button"
-        android:text="Save"
-        android:layout_marginLeft="165dp"
-        android:layout_marginTop="30dp" />
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp">
+
+        <ImageView
+            android:id="@+id/setup_image"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:adjustViewBounds="true"
+            app:srcCompat="@mipmap/set_up_pic"
+            tools:srcCompat="@mipmap/set_up_pic"
+            android:layout_centerHorizontal="true"/>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/setup_image">
+
+            <TextView
+                android:id="@+id/setupText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="Setup"
+                android:textSize="30dp"
+                android:textColor="@color/white"
+                />
+
+            <LinearLayout
+                android:id="@+id/setupPage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_below="@+id/setupText"
+                android:layout_marginTop="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Username"
+                        android:textAllCaps="true"
+                        android:textSize="15sp"
+                        android:textColor="@color/white"
+                        android:fontFamily="sans-serif-light"
+                        />
+
+                    <EditText
+                        android:id="@+id/setup_username"
+                        android:layout_marginTop="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:textSize="15sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="sans-serif-light"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:hint="Username"
+                        android:inputType="textEmailAddress"
+                        android:background='@drawable/input'
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Full Name"
+                        android:textAllCaps="true"
+                        android:textSize="15sp"
+                        android:textColor="@color/white"
+                        android:fontFamily="sans-serif-light"
+                        android:layout_marginTop="20dp"
+                        />
+
+                    <EditText
+                        android:id="@+id/setup_full_name"
+                        android:layout_marginTop="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:textSize="15sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="sans-serif-light"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:hint="Full Name"
+                        android:inputType="textEmailAddress"
+                        android:background='@drawable/input'
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Location"
+                        android:textAllCaps="true"
+                        android:textSize="15sp"
+                        android:textColor="@color/white"
+                        android:fontFamily="sans-serif-light"
+                        android:layout_marginTop="20dp"
+                        />
+
+                    <EditText
+                        android:id="@+id/setup_country"
+                        android:layout_marginTop="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:textSize="15sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="sans-serif-light"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:hint="Location"
+                        android:inputType="textEmailAddress"
+                        android:background='@drawable/input'
+                        />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/setup_button"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_below="@+id/setupPage"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="50dp"
+                android:paddingLeft="70dp"
+                android:paddingRight="70dp"
+                android:background='@drawable/button'
+                android:text="Login Now"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                />
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
 </RelativeLayout>
