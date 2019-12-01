@@ -39,7 +39,6 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     android:orientation="vertical"
                     android:layout_marginTop="20dp"
                     android:layout_below="@+id/title"
@@ -52,8 +51,8 @@
 
                         <ImageButton
                             android:id="@+id/UploadImage"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="210dp"
+                            android:layout_height="200dp"
                             app:srcCompat="@mipmap/upload_pic"
                             tools:srcCompat="@mipmap/upload_pic"
                             android:layout_gravity="center"
