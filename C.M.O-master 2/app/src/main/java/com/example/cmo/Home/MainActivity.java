@@ -373,7 +373,7 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onSuccess(Uri uri) {
                         String img_uri = uri.toString();
-                        ImageView PostImage = (ImageView) mView.findViewById(R.id.post_pro);
+                        ImageView PostImage = (ImageView) mView.findViewById(R.id.postpro);
                         Picasso.get().load(img_uri).into(PostImage); // crash
                     }
                 });

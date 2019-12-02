@@ -412,7 +412,7 @@ public class ProfileActivity extends AppCompatActivity {
                         Log.d(ProfileActivity.class.getSimpleName(), "setProfileimage's uri.toString(): [" + uri.toString() + "]\n===============");
                         String img_uri = uri.toString();
                         Log.d(ProfileActivity.class.getSimpleName(), "ProfileActivity - setProfileimage's - onSuccess --> " + img_uri + "\n");
-                        ImageView PostImage = (ImageView) mView.findViewById(R.id.post_pro);
+                        ImageView PostImage = (ImageView) mView.findViewById(R.id.postpro);
                         Picasso.get().load(img_uri).into(PostImage); // crash
                     }
                 });
