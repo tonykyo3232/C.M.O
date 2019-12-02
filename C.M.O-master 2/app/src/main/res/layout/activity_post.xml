@@ -1,98 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Post.PostActivity">
 
-
-    <EditText
-        android:id="@+id/PostText"
-        android:layout_width="313dp"
-        android:layout_height="169dp"
-        android:layout_marginStart="49dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="49dp"
-        android:autofillHints=""
-        android:background="@drawable/input"
-        android:ems="10"
-        android:gravity="start|top"
-        android:hint="@string/share_your_stories"
-        android:inputType="textMultiLine"
-        app:layout_constraintBottom_toTopOf="@+id/UpdatePostButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/UploadImage"
-        tools:ignore="MissingConstraints" />
-
-    <Button
-        android:id="@+id/UpdatePostButton"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="100dp"
-        android:background="@drawable/button"
-        android:text="@string/post"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/PostText"
-        app:layout_constraintVertical_bias="1.0"
-        tools:ignore="MissingConstraints" />
+        android:layout_height="600dp"
+        android:background="@color/mainBackground">
 
-    <ImageButton
-        android:id="@+id/UploadImage"
-        android:layout_width="157dp"
-        android:layout_height="98dp"
-        android:layout_marginStart="127dp"
-        android:layout_marginEnd="127dp"
-        android:contentDescription="TODO"
-        app:layout_constraintBottom_toTopOf="@+id/PostText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/location"
-        app:srcCompat="@mipmap/download"
-        tools:ignore="MissingConstraints" />
 
-    <EditText
-        android:id="@+id/location"
-        android:layout_width="228dp"
-        android:layout_height="35dp"
-        android:layout_marginStart="91dp"
-        android:layout_marginEnd="92dp"
-        android:layout_marginBottom="35dp"
-        android:background="@drawable/input"
-        android:ems="10"
-        android:hint="Enter the city..."
-        android:inputType="textPostalAddress"
-        app:layout_constraintBottom_toTopOf="@+id/UploadImage"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title" />
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="290dp"
-        android:layout_height="62dp"
-        android:layout_marginStart="72dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="49dp"
-        android:fontFamily="casual"
-        android:text="@string/posting_to_c_m_o"
-        android:textColor="#009688"
-        android:textSize="35sp"
-        app:layout_constraintBottom_toTopOf="@+id/location"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+            >
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                >
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:layout_marginStart="50dp"
+                    android:text="Posting to C.M.O"
+                    android:textSize="30dp"
+                    android:textColor="@color/black"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@+id/title"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/UploadImage"
+                            android:layout_width="210dp"
+                            android:layout_height="200dp"
+                            app:srcCompat="@mipmap/upload_pic"
+                            tools:srcCompat="@mipmap/upload_pic"
+                            android:layout_gravity="center"
+                            />
+
+                        <EditText
+                            android:id="@+id/location"
+                            android:layout_gravity="center"
+                            android:layout_width="250dp"
+                            android:layout_height="35dp"
+                            android:padding="7dp"
+                            android:background="@drawable/input"
+                            android:hint="Enter the city..."
+                            android:layout_marginTop="20dp"
+
+                            />
+
+
+                        <EditText
+                            android:id="@+id/PostText"
+                            android:layout_width="250dp"
+                            android:layout_height="170dp"
+                            android:layout_gravity="center"
+                            android:autofillHints=""
+                            android:background="@drawable/input"
+                            android:ems="10"
+                            android:padding="7dp"
+                            android:gravity="start|top"
+                            android:hint="@string/share_your_stories"
+                            android:inputType="textMultiLine"
+                            android:layout_marginTop="20dp"
+                            />
+
+                        <Button
+                            android:id="@+id/UpdatePostButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/button"
+                            android:layout_gravity="center"
+                            android:text="@string/post"
+                            android:textColor="@color/white"
+                            tools:ignore="MissingConstraints"
+                            android:layout_marginTop="20dp"
+                            />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+
+
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <include layout = "@layout/layout_bottom_navigation_view"></include>
     </RelativeLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>
+
+
+
