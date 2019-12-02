@@ -129,11 +129,14 @@ public class ProfileActivity extends AppCompatActivity {
                     TextView countryText = (TextView) findViewById(R.id.display_name);
                     TextView fullNameText = (TextView) findViewById(R.id.display_origin);
                     TextView userNameText = (TextView) findViewById(R.id.user_name);
+                    TextView topUserNameText = (TextView) findViewById(R.id.profileName);
+
 
                     // display the text to the phone screen
                     countryText.setText(country);
                     fullNameText.setText(fullName);
                     userNameText.setText(userName);
+                    topUserNameText.setText(fullName);
                 }
             }
 
@@ -142,32 +145,6 @@ public class ProfileActivity extends AppCompatActivity {
 
             }
         });
-
-
-        // access the information of the current user reference
-//        DatabaseReference CurrUserCountry = UsersRef.child(currentUserID).child("country");
-//        DatabaseReference CurrUserFullname = UsersRef.child(currentUserID).child("fullname");
-//        DatabaseReference CurrUserName = UsersRef.child(currentUserID).child("username");
-//
-//        //debug message
-//        Log.d(ProfileActivity.class.getSimpleName(), "Beginning of debug \n");
-//        Log.d(ProfileActivity.class.getSimpleName(), "CurrUserCountry: " + CurrUserCountry.toString());
-//        Log.d(ProfileActivity.class.getSimpleName(), "CurrUserFullname: " + CurrUserFullname.toString());
-//        Log.d(ProfileActivity.class.getSimpleName(), "CurrUserName: " + CurrUserName.toString());
-
-
-//        // find the following place to put the text
-//        TextView countryText = (TextView) findViewById(R.id.display_name);
-//        TextView fullNameText = (TextView) findViewById(R.id.display_origin);
-//        TextView userNameText = (TextView) findViewById(R.id.user_name);
-//
-//        // display the text to the phone screen
-//        countryText.setText(CurrUserCountry.toString());
-//        fullNameText.setText(CurrUserFullname.toString());
-//        userNameText.setText(CurrUserName.toString());
-        // ---------------------------
-
-
         Log.d(ProfileActivity.class.getSimpleName(), "Before DisplayAllUsersPosts");
         DisplayAllUsersPosts();
         Log.d(ProfileActivity.class.getSimpleName(), "After DisplayAllUsersPosts");
@@ -256,17 +233,11 @@ public class ProfileActivity extends AppCompatActivity {
                             viewHolder.setTime(model.getTime());
                             viewHolder.setDate(model.getDate());
                             viewHolder.setDescription(model.getDescription());
-
-//                            viewHolder.setPostLocation(model.getLocation());
-
+                            viewHolder.setPostLocation(model.getLocation());
                             viewHolder.setPostimage(getApplicationContext(), img_url);
-
-                            Log.d(ProfileActivity.class.getSimpleName(), "viewHolder.setProfileimage - before");
-//                            viewHolder.setProfileimage(getApplicationContext(), model.getProfileimage());
-                        viewHolder.setProfileimage(getApplicationContext(), model.getUid());
-                        Log.d(ProfileActivity.class.getSimpleName(), "viewHolder.setProfileimage - before - after");
-
+                            viewHolder.setProfileimage(getApplicationContext(), model.getUid());
                             viewHolder.setLikeButtonStatus(PostKey);
+
                             viewHolder.mView.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -472,7 +443,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         }
 
-        // new (forget what's for...)
+        // new
         public void setPostLocation(String location)
         {
             Log.d(ProfileActivity.class.getSimpleName(), "setPostLocation - " + location);

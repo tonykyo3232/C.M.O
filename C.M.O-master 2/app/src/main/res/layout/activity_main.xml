@@ -18,14 +18,14 @@
             android:layout_marginTop="50dp"
             android:layout_marginBottom="50dp">
 
-            <Button
-                android:id="@+id/logout_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/log_out"
-                android:layout_marginTop="80dp"
-                tools:layout_editor_absoluteY="54dp"
-                android:layout_marginStart="320dp"/>
+<!--            <Button-->
+<!--                android:id="@+id/logout_button"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="@string/log_out"-->
+<!--                android:layout_marginTop="80dp"-->
+<!--                tools:layout_editor_absoluteY="54dp"-->
+<!--                android:layout_marginStart="320dp"/>-->
 
 <!--            <ImageButton-->
 <!--                android:id="@+id/add_new_post_button"-->
@@ -48,13 +48,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="808dp" />
 
-            <ImageButton
-                android:id="@+id/add_new_post_button"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                app:srcCompat="@android:drawable/ic_input_add"
-                android:layout_marginStart="360dp"
-                android:contentDescription="@string/todo" />
+<!--            <ImageButton-->
+<!--                android:id="@+id/add_new_post_button"-->
+<!--                android:layout_width="48dp"-->
+<!--                android:layout_height="48dp"-->
+<!--                app:srcCompat="@android:drawable/ic_input_add"-->
+<!--                android:layout_marginStart="360dp"-->
+<!--                android:contentDescription="@string/todo" />-->
 
         </FrameLayout>
 

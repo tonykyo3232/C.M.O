@@ -16,7 +16,9 @@ public class HomeFragment extends Fragment {
     private static final String TAG = "HomeFragment";
 
     public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-       View view = inflater.inflate(R.layout.fragment_home, container, false);
+       View view = inflater.inflate(R.layout.activity_main, container, false);
+
+
        return view;
     }
 

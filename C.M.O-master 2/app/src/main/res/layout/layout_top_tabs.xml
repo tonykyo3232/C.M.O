@@ -8,9 +8,28 @@
         android:layout_height="50dp"
         android:layout_alignParentTop="true">
 
+
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+            <!-- Back up plan for now since Fragment doesn't work -->
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:src="@drawable/cmologo">
+                </ImageView>
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="C.M.O"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:layout_marginTop="15dp">-->
+<!--            </TextView>-->
 
             <!-- Note: NEED TO FIX TO TabLayout, not Toolbar.
                         Duc added the color-->
@@ -18,8 +37,7 @@
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-            >
+                android:layout_height="wrap_content">
             </com.google.android.material.tabs.TabLayout>
 
         </com.google.android.material.appbar.AppBarLayout>
