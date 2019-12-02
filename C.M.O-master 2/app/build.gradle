@@ -84,4 +84,6 @@ dependencies {
 
     // comment for now (11/21)
 //    implementation 'androidx.appcompat:testImplementation:1.0.2'
+
+    implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
 }
