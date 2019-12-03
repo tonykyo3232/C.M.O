@@ -33,6 +33,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -120,23 +121,27 @@ public class ProfileActivity extends AppCompatActivity {
                     String fullName = userSnapshot.child("fullname").getValue(String.class);
                     String userName = userSnapshot.child("username").getValue(String.class);
 
+
                     Log.d(ProfileActivity.class.getSimpleName(), "country: " + country);
                     Log.d(ProfileActivity.class.getSimpleName(), "\nfullname: " + fullName);
                     Log.d(ProfileActivity.class.getSimpleName(), "\nusername: " + userName);
 
 
                     // find the following place to put the text
-                    TextView countryText = (TextView) findViewById(R.id.display_name);
-                    TextView fullNameText = (TextView) findViewById(R.id.display_origin);
+                    TextView fullNameText = (TextView) findViewById(R.id.display_name);
+                    TextView countryText = (TextView) findViewById(R.id.display_origin);
                     TextView userNameText = (TextView) findViewById(R.id.user_name);
                     TextView topUserNameText = (TextView) findViewById(R.id.profileName);
-
 
                     // display the text to the phone screen
                     countryText.setText(country);
                     fullNameText.setText(fullName);
                     userNameText.setText(userName);
                     topUserNameText.setText(fullName);
+
+                    if(userSnapshot.getKey().equals(currentUserID)){
+                        break;
+                    }
                 }
             }
 
@@ -203,6 +208,10 @@ public class ProfileActivity extends AppCompatActivity {
     **********************************/
     private void DisplayAllUsersPosts()
     {
+
+        //deceding order
+        Query SortPostsInDecedningOrder = PostsRef.orderByChild("counter");
+
         Log.d(ProfileActivity.class.getSimpleName(), "ProfileActivity - DisplayAllUsersPosts - begin");
         FirebaseRecyclerAdapter<Posts, ProfileActivity.PostsViewHolder> firebaseRecyclerAdapter =
                 new FirebaseRecyclerAdapter<Posts, ProfileActivity.PostsViewHolder>
@@ -210,7 +219,7 @@ public class ProfileActivity extends AppCompatActivity {
                                 Posts.class,
                                 R.layout.all_posts_layout,
                                 ProfileActivity.PostsViewHolder.class,
-                                PostsRef
+                                SortPostsInDecedningOrder
                         )
                 {
                     @Override

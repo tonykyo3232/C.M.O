@@ -170,9 +170,10 @@ public class EditProfileFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                    String country = userSnapshot.child("country").getValue(String.class);
                     String fullName = userSnapshot.child("fullname").getValue(String.class);
                     String userName = userSnapshot.child("username").getValue(String.class);
+                    String country = userSnapshot.child("country").getValue(String.class);
+
 
                     // find the following place to put the text
                     userNameText = (TextView) view.findViewById(R.id.username);
@@ -183,6 +184,10 @@ public class EditProfileFragment extends Fragment {
                     userNameText.setText(userName);
                     fullNameText.setText(fullName);
                     countryText.setText(country);
+
+                    if(userSnapshot.getKey().equals(currentUserID)){
+                        break;
+                    }
                 }
             }
 

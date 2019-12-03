@@ -44,15 +44,12 @@ import com.google.firebase.storage.StorageReference;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 public class MainActivity extends AppCompatActivity
 {
     private RecyclerView postList;
-    private Button LogoutButton; // custom design...
-
-    private ImageView NavProfileImage;
-    private TextView NavProfileUserName;
-    private ImageButton AddNewPostButton;
-
     private FirebaseAuth mAuth;
     private DatabaseReference UsersRef, PostsRef, LikesRef;
 
@@ -60,6 +57,9 @@ public class MainActivity extends AppCompatActivity
     private StorageReference storageRef = storage.getReference();
     private Context mContext = MainActivity.this;
     private static final int ACTIVITY_NUM = 0;
+
+    private String saveCurrentDate, saveCurrentTime, postRandomName;
+    //private String outerParent;
 
     String currentUserID;
     Boolean LikeChecker = false;
@@ -91,24 +91,6 @@ public class MainActivity extends AppCompatActivity
         linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
         postList.setLayoutManager(linearLayoutManager);
-
-//        LogoutButton.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View view){
-//                Log.d(MainActivity.class.getSimpleName(), "==============\nLogoutButton.setOnClickListener\n===============");
-//                mAuth.signOut();
-//                SendUserToLoginActivity();
-//            }
-//        });
-
-        // comment for now
-//        AddNewPostButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v)
-//            {
-//                SendUserToPostActivity();
-//            }
-//        });
 
         DisplayAllUsersPosts();
     }
@@ -189,26 +171,83 @@ public class MainActivity extends AppCompatActivity
                                 Log.d(MainActivity.class.getSimpleName(), "--------Like button clicked---------");
                                 Log.d(MainActivity.class.getSimpleName(), "LikeChecker status "+ LikeChecker + ":  ");
 
-
                                 LikesRef.addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-
                                         if(LikeChecker.equals(true)){
                                             if(dataSnapshot.child(PostKey).hasChild(mAuth.getCurrentUser().getUid())){
+                                                // when user remove like
                                                 LikesRef.child(PostKey).child(mAuth.getCurrentUser().getUid()).removeValue();
                                                 LikeChecker = false;
                                                 Log.d(MainActivity.class.getSimpleName(), "--------Inside Like button clicked---------");
 
                                             }
                                             else{
-                                                LikesRef.child(PostKey).child(mAuth.getCurrentUser().getUid()).setValue(true);
+                                                // when user type like
+
+                                                // ======= from PostActivity
+                                                Calendar calendarDate = Calendar.getInstance();
+
+                                                SimpleDateFormat currentDate = new SimpleDateFormat("dd/MMMM/yyyy");
+                                                saveCurrentDate = currentDate.format(calendarDate.getTime());
+
+                                                Calendar calendarTime = Calendar.getInstance();
+                                                SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss");
+                                                saveCurrentTime = currentTime.format(calendarTime.getTime());
+//                                                postRandomName = saveCurrentDate + ", " + saveCurrentTime;
+
+                                                String [] spiltDateResult = saveCurrentDate.split("/");
+                                                String [] spiltTimeResult = saveCurrentTime.split(":");
+
+                                                String day = spiltDateResult[0];
+                                                String month = spiltDateResult[1];
+                                                String year = spiltDateResult[2];
+
+                                                String hours = spiltTimeResult[0];
+                                                String mins = spiltTimeResult[1];
+                                                String secs = spiltTimeResult[2];
+
+                                                // debug
+                                                Log.d(MainActivity.class.getSimpleName(), "day: " + day + "\n");
+                                                Log.d(MainActivity.class.getSimpleName(), "Month: " + month + "\n");
+                                                Log.d(MainActivity.class.getSimpleName(), "year: " + year + "\n");
+                                                Log.d(MainActivity.class.getSimpleName(), "hours: " + hours + "\n");
+                                                Log.d(MainActivity.class.getSimpleName(), "mins: " + mins + "\n");
+                                                Log.d(MainActivity.class.getSimpleName(), "secs: " + secs + "\n");
+
+                                                postRandomName = month + "/" + day + "/" + year + ", " + hours + ":" + mins;
+
+                                                // use this parent name to differentiate the like from users and posts
+//                                                outerParent = month + ":" + day + ":" + year + ":" + hours + ":" + mins + ":" + secs;
+                                                // =======
+
+
+                                                LikesRef.child(PostKey).child(mAuth.getCurrentUser().getUid()).setValue(postRandomName);
+
+
+
+                                                // ===== by Tony, for debug only (will delete later)
+                                                LikesRef.child(PostKey).addValueEventListener(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                        for (DataSnapshot child: dataSnapshot.getChildren()){
+                                                            Log.d(MainActivity.class.getSimpleName(), "Tony's debug place" + "\n");
+                                                            Log.d(MainActivity.class.getSimpleName(), "child.toString(): " + child.getKey() + "\n");
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                    }
+                                                });
+                                                // ===== by Tony, for debug only
+
+//                                                LikesRef.child(PostKey).child(mAuth.getCurrentUser().getUid()).setValue(true);
                                                 LikeChecker = false;
                                             }
                                         }
-
-
                                     }
 
                                     @Override
@@ -227,13 +266,12 @@ public class MainActivity extends AppCompatActivity
     public static class PostsViewHolder extends RecyclerView.ViewHolder
     {
         View mView;
-        DatabaseReference PostsRef_ = FirebaseDatabase.getInstance().getReference().child("Posts");
-
         ImageButton LikePostButton, CommentPostButton;
         TextView DisplayNoOfLikes;
         int countLikes;
         String currentUserId;
         DatabaseReference LikesRef;
+        private String saveCurrentDate_, saveCurrentTime_, postRandomName_;
 
         public PostsViewHolder(View itemView)
         {
@@ -244,11 +282,11 @@ public class MainActivity extends AppCompatActivity
             CommentPostButton = (ImageButton) mView.findViewById(R.id.comment_button);
             DisplayNoOfLikes = (TextView) mView.findViewById(R.id.display_no_of_likes);
 
-            LikesRef = FirebaseDatabase.getInstance().getReference().child("Likes");
             currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            LikesRef = FirebaseDatabase.getInstance().getReference().child("Likes");
         }
 
-        public void setLikeButtonStatus(final String PostKey){
+         public void setLikeButtonStatus(final String PostKey){
             LikesRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -265,7 +303,6 @@ public class MainActivity extends AppCompatActivity
                         DisplayNoOfLikes.setText((Integer.toString(countLikes)+(" Likes")));
 
                     }
-
                 }
 
                 @Override
