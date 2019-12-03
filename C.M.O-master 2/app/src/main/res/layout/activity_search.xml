@@ -1,9 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Search.SearchActivity">
+    tools:context=".Home.MainActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:id="@+id/search_bar"
+            android:layout_width="291dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="70dp"
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="search_county"
+            android:inputType="textPersonName"/>
+
+        <Button
+            android:id="@+id/search_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="70dp"
+            android:layout_marginStart="320dp"
+            android:text="search"
+            android:textSize="10dp"
+            />
+
+        <FrameLayout
+            android:id="@+id/main_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="120dp"
+            android:layout_marginBottom="50dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/default_all_users_like_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </FrameLayout>
+
+
+        <!-- Top toolbar -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/reLayout1">
+            <include layout = "@layout/layout_top_tabs"/>
+        </RelativeLayout>
+
+        <!-- Middle Section (body) -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/reLayout2"
+            android:layout_below="@+id/reLayout1">
+            <include layout = "@layout/layout_center_viewpager"/>
+        </RelativeLayout>
+
+        <!-- bottom navigation -->
+        <include layout="@layout/layout_bottom_navigation_view"/>
+    </RelativeLayout>
+
+</androidx.drawerlayout.widget.DrawerLayout>

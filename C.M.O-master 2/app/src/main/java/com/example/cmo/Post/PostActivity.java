@@ -81,18 +81,12 @@ public class PostActivity extends AppCompatActivity {
 
         PostImageReference = FirebaseStorage.getInstance().getReference();
         UserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(current_user_id);
-
-//        PostsRef = FirebaseDatabase.getInstance().getReference().child("Posts").child(current_user_id);
         PostsRef = FirebaseDatabase.getInstance().getReference().child("Posts");
 
         SelectPostImage = findViewById(R.id.UploadImage);
         UpdatePostButton = findViewById(R.id.UpdatePostButton);
         PostDescription = findViewById(R.id.PostText);
-
-        // new
         PostLocation = findViewById(R.id.location);
-
-        //loadingbar...
 
         SelectPostImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,8 +126,6 @@ public class PostActivity extends AppCompatActivity {
         Log.d(PostActivity.class.getSimpleName(), "ValidatePostInfo\n");
 
         Description = PostDescription.getText().toString();
-
-        // new
         Location = PostLocation.getText().toString();
 
         if(ImageUri == null){
@@ -144,9 +136,6 @@ public class PostActivity extends AppCompatActivity {
             Toast.makeText(this, "Please say something about your image...", Toast.LENGTH_SHORT).show();
         }
         else{
-            //loadingbar some code...
-            //...
-            //...
             StoringImageToFirebaseStorage();
         }
         Log.d(PostActivity.class.getSimpleName(), "ValidatePostInfo - finish\n");
