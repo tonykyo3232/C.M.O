@@ -14,9 +14,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.cmo.Home.ClickPostActivity;
 import com.example.cmo.Home.CommentsActivity;
@@ -41,15 +43,19 @@ import com.squareup.picasso.Picasso;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+
 public class SearchActivity extends AppCompatActivity {
 
     private Context mContext = SearchActivity.this;
     private static final int ACTIVITY_NUM = 1;
 
+    private EditText mSearchField;
+    private Button mSearchBtn;
+    private RecyclerView mResultList;
+
     private FirebaseAuth mAuth;
-    private DatabaseReference UsersRef, PostsRef, LikesRef;
+    private DatabaseReference PostsRef, LikesRef;
     Boolean LikeChecker = false;
-    private RecyclerView postList;
     private String saveCurrentDate, saveCurrentTime, postRandomName;
 
     @Override
@@ -57,28 +63,171 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+        setupBottomNavigationView();
         mAuth = FirebaseAuth.getInstance();
-        UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         PostsRef = FirebaseDatabase.getInstance().getReference().child("Posts");
         LikesRef = FirebaseDatabase.getInstance().getReference().child("Likes");
 
+        mSearchField = (EditText) findViewById (R.id.search_bar);
+        mSearchBtn = (Button) findViewById(R.id.search_button);
 
-        postList = (RecyclerView) findViewById(R.id.default_all_users_like_list);
-        postList.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setReverseLayout(true);
-        linearLayoutManager.setStackFromEnd(true);
-        postList.setLayoutManager(linearLayoutManager);
+        mResultList = (RecyclerView) findViewById(R.id.all_users_post_list);
+        mResultList.setHasFixedSize(true);
+        mResultList.setLayoutManager(new LinearLayoutManager(this));
 
-        Button searhBtn =(Button) findViewById(R.id.search_button);
-        setupBottomNavigationView();
-
-        searhBtn.setOnClickListener(new View.OnClickListener() {
+        mSearchBtn.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View v) {
-                DisplayAllUsersPosts();
+            public void onClick(View view) {
+                String searchText = mSearchField.getText().toString();
+                firebasePostSearch(searchText);
             }
         });
+    }
+
+    private void firebasePostSearch(String searchText) {
+
+        Toast.makeText(SearchActivity.this, "Started Search", Toast.LENGTH_SHORT).show();
+
+        Query firebaseSearchQuery = PostsRef.orderByChild("location").startAt(searchText).endAt(searchText + "\uf8ff");
+
+        Log.d(SearchActivity.class.getSimpleName(), "=============================");
+        Log.d(SearchActivity.class.getSimpleName(), "============"+firebaseSearchQuery+ "===============");
+        Log.d(SearchActivity.class.getSimpleName(), "============"+searchText+ "===============");
+
+
+
+        FirebaseRecyclerAdapter<Posts, PostsViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Posts, PostsViewHolder>(
+                Posts.class,
+                R.layout.all_posts_layout,
+                PostsViewHolder.class,
+                firebaseSearchQuery
+        ) {
+            @Override
+            protected void populateViewHolder(PostsViewHolder viewHolder, Posts model, int position) {
+
+                final String PostKey = getRef(position).getKey();
+
+                viewHolder.setDetails(getApplicationContext(),model.getFullname(),model.getDescription(), model.getTime(), model.getDate(), model.getLocation());
+                viewHolder.setPostimage(model.getImage_url());
+                viewHolder.setProfileimage(model.getUid());
+
+                viewHolder.setLikeButtonStatus(PostKey);
+
+                //===
+                viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent clickPostIntent = new Intent (SearchActivity.this, ClickPostActivity.class);
+                        clickPostIntent.putExtra("PostKey",PostKey);
+                        startActivity(clickPostIntent);
+                    }
+                });
+
+                viewHolder.CommentPostButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent commentsInent = new Intent(SearchActivity.this, CommentsActivity.class);
+                        commentsInent.putExtra("PostKey",PostKey);
+                        startActivity(commentsInent);
+                    }
+                });
+
+                viewHolder.LikePostButton.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        LikeChecker = true;
+                        Log.d(MainActivity.class.getSimpleName(), "--------Like button clicked---------");
+                        Log.d(MainActivity.class.getSimpleName(), "LikeChecker status "+ LikeChecker + ":  ");
+
+                        LikesRef.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                if(LikeChecker.equals(true)){
+                                    if(dataSnapshot.child(PostKey).hasChild(mAuth.getCurrentUser().getUid())){
+                                        // when user remove like
+                                        LikesRef.child(PostKey).child(mAuth.getCurrentUser().getUid()).removeValue();
+                                        LikeChecker = false;
+                                        Log.d(MainActivity.class.getSimpleName(), "--------Inside Like button clicked---------");
+
+                                    }
+                                    else{
+                                        // when user type like
+
+                                        // ======= from PostActivity
+                                        Calendar calendarDate = Calendar.getInstance();
+
+                                        SimpleDateFormat currentDate = new SimpleDateFormat("dd/MMMM/yyyy");
+                                        saveCurrentDate = currentDate.format(calendarDate.getTime());
+
+                                        Calendar calendarTime = Calendar.getInstance();
+                                        SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss");
+                                        saveCurrentTime = currentTime.format(calendarTime.getTime());
+
+                                        String [] spiltDateResult = saveCurrentDate.split("/");
+                                        String [] spiltTimeResult = saveCurrentTime.split(":");
+
+                                        String day = spiltDateResult[0];
+                                        String month = spiltDateResult[1];
+                                        String year = spiltDateResult[2];
+
+                                        String hours = spiltTimeResult[0];
+                                        String mins = spiltTimeResult[1];
+                                        String secs = spiltTimeResult[2];
+
+                                        // debug
+                                        Log.d(MainActivity.class.getSimpleName(), "day: " + day + "\n");
+                                        Log.d(MainActivity.class.getSimpleName(), "Month: " + month + "\n");
+                                        Log.d(MainActivity.class.getSimpleName(), "year: " + year + "\n");
+                                        Log.d(MainActivity.class.getSimpleName(), "hours: " + hours + "\n");
+                                        Log.d(MainActivity.class.getSimpleName(), "mins: " + mins + "\n");
+                                        Log.d(MainActivity.class.getSimpleName(), "secs: " + secs + "\n");
+
+                                        postRandomName = month + "/" + day + "/" + year + ", " + hours + ":" + mins;
+
+                                        // use this parent name to differentiate the like from users and posts
+//                                                outerParent = month + ":" + day + ":" + year + ":" + hours + ":" + mins + ":" + secs;
+                                        // =======
+
+
+                                        LikesRef.child(PostKey).child(mAuth.getCurrentUser().getUid()).setValue(postRandomName);
+
+
+
+                                        // ===== by Tony, for debug only (will delete later)
+                                        LikesRef.child(PostKey).addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                for (DataSnapshot child: dataSnapshot.getChildren()){
+                                                    Log.d(MainActivity.class.getSimpleName(), "Tony's debug place" + "\n");
+                                                    Log.d(MainActivity.class.getSimpleName(), "child.toString(): " + child.getKey() + "\n");
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                            }
+                                        });
+                                        // ===== by Tony, for debug only
+
+                                        LikeChecker = false;
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                });
+                //===
+            }
+        };
+
+        mResultList.setAdapter(firebaseRecyclerAdapter);
     }
 
     // Bottom navigation view set up
@@ -86,7 +235,7 @@ public class SearchActivity extends AppCompatActivity {
     {
         Log.d(SearchActivity.class.getSimpleName(), "SearchActivity - setupBottomNavigationView");
         BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
-        BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
+        BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx); // error!
 
         BottomNavigationViewHelper.enableNavigation(mContext, bottomNavigationViewEx);
 
@@ -95,141 +244,30 @@ public class SearchActivity extends AppCompatActivity {
         menuItem.setChecked(true);
     }
 
+    public static class PostsViewHolder extends RecyclerView.ViewHolder{
 
-    // *************
-    private void DisplayAllUsersPosts()
-    {
-        //deceding order
-        Query SortPostsInDecedningOrder = PostsRef.orderByChild("counter");
-
-        FirebaseRecyclerAdapter<Posts, PostsViewHolder> firebaseRecyclerAdapter =
-                new FirebaseRecyclerAdapter<Posts, PostsViewHolder>
-                        (
-                                Posts.class,
-                                R.layout.all_posts_layout,
-                                PostsViewHolder.class,
-                                //replace postsRef
-                                SortPostsInDecedningOrder
-                        )
-                {
-                    @Override
-                    protected void populateViewHolder(PostsViewHolder viewHolder, Posts model, int position)
-                    {
-                        final String PostKey = getRef(position).getKey();
-
-                        String img_url = model.getImage_url();
-
-                        viewHolder.setFullname(model.getFullname());
-                        viewHolder.setTime(model.getTime());
-                        viewHolder.setDate(model.getDate());
-                        viewHolder.setDescription(model.getDescription());
-                        viewHolder.setProfileimage(getApplicationContext(), model.getUid());
-
-                        // new
-                        viewHolder.setPostLocation(model.getLocation());
-                        viewHolder.setPostimage(getApplicationContext(), img_url);
-                        viewHolder.setLikeButtonStatus(PostKey);
-
-                        viewHolder.mView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent clickPostIntent = new Intent (SearchActivity.this, ClickPostActivity.class);
-                                clickPostIntent.putExtra("PostKey",PostKey);
-                                startActivity(clickPostIntent);
-                            }
-                        });
-
-                        viewHolder.CommentPostButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent commentsInent = new Intent(SearchActivity.this, CommentsActivity.class);
-                                commentsInent.putExtra("PostKey",PostKey);
-                                startActivity(commentsInent);
-                            }
-                        });
-
-                        viewHolder.LikePostButton.setOnClickListener(new View.OnClickListener(){
-                            @Override
-                            public void onClick(View v) {
-                                LikeChecker = true;
-
-                                LikesRef.addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                                        if(LikeChecker.equals(true)){
-                                            if(dataSnapshot.child(PostKey).hasChild(mAuth.getCurrentUser().getUid())){
-                                                // when user remove like
-                                                LikesRef.child(PostKey).child(mAuth.getCurrentUser().getUid()).removeValue();
-                                                LikeChecker = false;
-
-                                            }
-                                            else{
-                                                // when user type like
-
-                                                // ======= from PostActivity
-                                                Calendar calendarDate = Calendar.getInstance();
-
-                                                SimpleDateFormat currentDate = new SimpleDateFormat("dd/MMMM/yyyy");
-                                                saveCurrentDate = currentDate.format(calendarDate.getTime());
-
-                                                Calendar calendarTime = Calendar.getInstance();
-                                                SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss");
-                                                saveCurrentTime = currentTime.format(calendarTime.getTime());
-//                                                postRandomName = saveCurrentDate + ", " + saveCurrentTime;
-
-                                                String [] spiltDateResult = saveCurrentDate.split("/");
-                                                String [] spiltTimeResult = saveCurrentTime.split(":");
-
-                                                String day = spiltDateResult[0];
-                                                String month = spiltDateResult[1];
-                                                String year = spiltDateResult[2];
-
-                                                String hours = spiltTimeResult[0];
-                                                String mins = spiltTimeResult[1];
-                                                String secs = spiltTimeResult[2];
-
-                                                postRandomName = month + "/" + day + "/" + year + ", " + hours + ":" + mins;
-                                                LikesRef.child(PostKey).child(mAuth.getCurrentUser().getUid()).setValue(postRandomName);
-                                                LikeChecker = false;
-                                            }
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                    }
-                                });
-                            }
-                        });
-
-                    }
-                };
-        postList.setAdapter(firebaseRecyclerAdapter);
-    }
-
-    public static class PostsViewHolder extends RecyclerView.ViewHolder
-    {
         View mView;
+
+        //===
         ImageButton LikePostButton, CommentPostButton;
         TextView DisplayNoOfLikes;
         int countLikes;
         String currentUserId;
         DatabaseReference LikesRef;
-        private String saveCurrentDate_, saveCurrentTime_, postRandomName_;
+        //===
 
-        public PostsViewHolder(View itemView)
-        {
+        public PostsViewHolder(View itemView){
             super(itemView);
             mView = itemView;
 
+            //===
             LikePostButton = (ImageButton) mView.findViewById(R.id.like_button);
             CommentPostButton = (ImageButton) mView.findViewById(R.id.comment_button);
             DisplayNoOfLikes = (TextView) mView.findViewById(R.id.display_no_of_likes);
 
             currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
             LikesRef = FirebaseDatabase.getInstance().getReference().child("Likes");
+            //===
         }
 
         public void setLikeButtonStatus(final String PostKey){
@@ -258,13 +296,21 @@ public class SearchActivity extends AppCompatActivity {
             });
         }
 
-        public void setFullname(String fullname)
-        {
-            TextView username = (TextView) mView.findViewById(R.id.post_user_name);
-            username.setText(fullname);
+        public void setDetails(Context ctx, String post_user_name, String post_description, String post_time, String post_date, String post_location){
+            TextView user_name = (TextView) mView.findViewById(R.id.post_user_name);
+            TextView user_date = (TextView) mView.findViewById(R.id.post_date);
+            TextView user_time = (TextView) mView.findViewById(R.id.post_time);
+            TextView user_location = (TextView) mView.findViewById(R.id.post_location);
+            TextView user_post = (TextView) mView.findViewById(R.id.post_description);
+
+            user_name.setText(post_user_name);
+            user_date.setText(post_date);
+            user_time.setText(post_time);
+            user_location.setText(post_location);
+            user_post.setText(post_description);
         }
 
-        public void setProfileimage(Context ctx, String userId)
+        public void setProfileimage(String userId)
         {
             // by website
             FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -280,35 +326,17 @@ public class SearchActivity extends AppCompatActivity {
                     public void onSuccess(Uri uri) {
                         String img_uri = uri.toString();
                         ImageView PostImage = (ImageView) mView.findViewById(R.id.postpro);
-                        Picasso.get().load(img_uri).into(PostImage); // crash
+                        Picasso.get().load(img_uri).into(PostImage);
                     }
                 });
             }
         }
 
-        public void setTime(String time)
-        {
-            TextView PostTime = (TextView) mView.findViewById(R.id.post_time);
-            PostTime.setText( " " + time);
-        }
-
-        public void setDate(String date)
-        {
-            TextView PostDate = (TextView) mView.findViewById(R.id.post_date);
-            PostDate.setText("  " + date);
-        }
-
-        public void setDescription(String description)
-        {
-            TextView PostDescription = (TextView) mView.findViewById(R.id.post_description);
-            PostDescription.setText(description);
-        }
-
-        public void setPostimage(Context ctx1, String postimage)
+        public void setPostimage(String postimage_path)
         {
             // by website
             FirebaseStorage storage = FirebaseStorage.getInstance();
-            StorageReference storageRef = storage.getReference().child("Posts Images").child(postimage);
+            StorageReference storageRef = storage.getReference().child("Posts Images").child(postimage_path);
             storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
@@ -318,14 +346,5 @@ public class SearchActivity extends AppCompatActivity {
                 }
             });
         }
-
-        // new
-        public void setPostLocation(String location)
-        {
-            TextView PostLocation = (TextView) mView.findViewById(R.id.post_location);
-            PostLocation.setText(" \n" + location);
-        }
-
     }
-    // *************
 }

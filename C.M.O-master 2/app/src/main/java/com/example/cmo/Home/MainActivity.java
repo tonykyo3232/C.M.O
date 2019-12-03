@@ -84,23 +84,6 @@ public class MainActivity extends AppCompatActivity
         DisplayAllUsersPosts();
     }
 
-
-    private void setUpViewPager(){
-        SectionPagerAdaptor adaptor = new SectionPagerAdaptor(getSupportFragmentManager(), 0);
-        adaptor.addFragment(new HomeFragment());
-//        adaptor.addFragment(new PostFragment());
-        ViewPager viewPager = (ViewPager) findViewById(R.id.container);
-        viewPager.setAdapter(adaptor);
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
-
-        tabLayout.getTabAt(0).setIcon(R.drawable.ic_action_home);
-        //        tabLayout.getTabAt(1).setIcon(R.drawable.ic_action_add_post);
-
-
-    }
-
     private void DisplayAllUsersPosts()
     {
         //deceding order
@@ -129,10 +112,9 @@ public class MainActivity extends AppCompatActivity
                         viewHolder.setDate(model.getDate());
                         viewHolder.setDescription(model.getDescription());
                         viewHolder.setProfileimage(getApplicationContext(), model.getUid());
-
-                        // new
                         viewHolder.setPostLocation(model.getLocation());
                         viewHolder.setPostimage(getApplicationContext(), img_url);
+
                         viewHolder.setLikeButtonStatus(PostKey);
 
                         viewHolder.mView.setOnClickListener(new View.OnClickListener() {
