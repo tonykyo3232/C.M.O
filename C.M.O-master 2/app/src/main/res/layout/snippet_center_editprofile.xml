@@ -40,7 +40,7 @@
                 <ImageView
                     android:layout_width="35dp"
                     android:layout_height="35dp"
-                    android:src="@drawable/ic_action_arrowback"
+                    android:src="@drawable/ic_action_username"
                     android:layout_centerVertical="true"/>
 
                 <EditText
@@ -68,7 +68,7 @@
                 <ImageView
                     android:layout_width="35dp"
                     android:layout_height="35dp"
-                    android:src="@drawable/ic_action_arrowback"
+                    android:src="@drawable/ic_action_username"
                     android:layout_centerVertical="true"/>
 
                 <EditText
@@ -95,7 +95,7 @@
                 <ImageView
                     android:layout_width="35dp"
                     android:layout_height="35dp"
-                    android:src="@drawable/ic_action_arrowback"
+                    android:src="@drawable/ic_action_home"
                     android:layout_centerVertical="true"/>
 
                 <EditText
