@@ -1,7 +1,11 @@
 package com.example.cmo.Profile;
 
+import android.Manifest;
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +18,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.cmo.Account.SetupActivity;
@@ -34,7 +39,11 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.picasso.Picasso;
 import com.twitter.sdk.android.core.models.User;
 
+import java.io.InputStream;
+import java.util.EventListener;
 import java.util.HashMap;
+
+import static android.app.Activity.RESULT_OK;
 
 public class EditProfileFragment extends Fragment {
 
@@ -51,7 +60,12 @@ public class EditProfileFragment extends Fragment {
     private String newCountry;
     private ImageView mprofilephoto;
     private Button updateBtn;
-
+    private Button changePhoto;
+    private ImageView profilePhoto;
+    private static final int Gallery_Per = 1;
+    private Uri imageUri;
+    private static final int IIMAGE_PICK_CODE = 1000;
+    private  static final int PERMISSION_CODE = 1001;
     private TextView userNameText;
     private TextView fullNameText;
     private TextView countryText;
@@ -69,6 +83,8 @@ public class EditProfileFragment extends Fragment {
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         currentUserID = mAuth.getCurrentUser().getUid();
 
+        changePhoto = (Button) view.findViewById(R.id.changeProfilePhoto);
+        profilePhoto = (ImageView) view.findViewById(R.id.profile_photo_editprofile);
         // By Tony
         updateBtn = (Button) view.findViewById(R.id.btn_update);
 
@@ -123,6 +139,17 @@ public class EditProfileFragment extends Fragment {
                 // ****
             }
         });
+        ///////////////////////////////////////////////////yongsheng
+        changePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent galleryIntent = new Intent();
+                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                galleryIntent.setType("image/*");
+                startActivityForResult(galleryIntent, Gallery_Per);
+                }
+            });
+
 
         ImageView backArrow = (ImageView) view.findViewById(R.id.backArrow);
         backArrow.setOnClickListener(new View.OnClickListener() {
@@ -133,8 +160,20 @@ public class EditProfileFragment extends Fragment {
 //                getActivity().finish();
             }
         });
+////////////////////////////////////////////////////////////////////////
 
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        //super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK){
+            if(requestCode == Gallery_Per && resultCode == RESULT_OK && data != null) {
+                profilePhoto.setImageURI(data.getData());
+
+            }
+        }
     }
 
     private void initImageLoader(){
