@@ -59,44 +59,41 @@
                         android:id="@+id/display_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="5dp"
                         android:text="Tony Lee"
                         android:textColor="@color/black"
                         android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="5dp">
-                    </TextView>
+                        android:textStyle="bold"></TextView>
 
                     <TextView
                         android:id="@+id/display_origin"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:layout_marginTop="40dp"
                         android:text="Taiwan"
                         android:textColor="@color/black"
-                        android:textSize="16sp"
-                        android:layout_gravity="center">
-                    </TextView>
+                        android:textSize="16sp"></TextView>
 
                     <TextView
                         android:id="@+id/user_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:layout_marginTop="75dp"
                         android:text="tonykyo3232"
                         android:textColor="@color/black"
-                        android:textSize="16sp"
-                        android:layout_gravity="center">
-                    </TextView>
+                        android:textSize="16sp"></TextView>
 
-<!--                    <ImageView-->
-<!--                        android:id="@+id/profile_image"-->
-<!--                        android:layout_width="80dp"-->
-<!--                        android:layout_height="80dp"-->
-<!--                        android:layout_centerVertical="true"-->
-<!--                        tools:srcCompat="@mipmap/img_default_profile"-->
-<!--                        android:layout_marginLeft="35dp">-->
-<!--                    </ImageView>-->
+                    <!--                    <ImageView-->
+                    <!--                        android:id="@+id/profile_image"-->
+                    <!--                        android:layout_width="80dp"-->
+                    <!--                        android:layout_height="80dp"-->
+                    <!--                        android:layout_centerVertical="true"-->
+                    <!--                        tools:srcCompat="@mipmap/img_default_profile"-->
+                    <!--                        android:layout_marginLeft="35dp">-->
+                    <!--                    </ImageView>-->
 
                     <include layout="@layout/snippet_top_profile"></include>
                 </RelativeLayout>

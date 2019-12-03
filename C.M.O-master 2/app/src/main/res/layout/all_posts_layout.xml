@@ -64,7 +64,7 @@
                         android:orientation="vertical">
 
                         <LinearLayout
-                            android:layout_width="200dp"
+                            android:layout_width="300dp"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             >
@@ -76,7 +76,8 @@
                                 android:text="@string/date"
                                 android:textColor="@android:color/black"
                                 android:textSize="12sp"
-                                android:fontFamily="sans-serif-medium">
+                                android:fontFamily="sans-serif-medium"
+                                android:layout_marginTop="14dp">
 
                             </TextView>
 
@@ -87,23 +88,36 @@
                                 android:text="@string/time"
                                 android:textColor="@android:color/black"
                                 android:textSize="12sp"
-                                android:fontFamily="sans-serif-medium">
+                                android:fontFamily="sans-serif-medium"
+                                android:layout_marginTop="14dp">
+                            </TextView>
 
+                            <TextView
+                                android:layout_marginLeft="5dp"
+                                android:id="@+id/post_location"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Location"
+                                android:textColor="@android:color/black"
+                                android:textSize="12sp"
+                                android:layout_marginStart="6dp"
+                                android:fontFamily="sans-serif-medium">
                             </TextView>
 
                         </LinearLayout>
 
-                        <TextView
-                            android:layout_marginLeft="5dp"
-                            android:id="@+id/post_location"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Location"
-                            android:textColor="@android:color/black"
-                            android:textSize="12sp"
-                            android:fontFamily="sans-serif-medium">
+<!--                        <TextView-->
+<!--                            android:layout_marginLeft="5dp"-->
+<!--                            android:id="@+id/post_location"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="Location"-->
+<!--                            android:textColor="@android:color/black"-->
+<!--                            android:textSize="12sp"-->
+<!--                            android:layout_marginStart="6dp"-->
+<!--                            android:fontFamily="sans-serif-medium">-->
 
-                        </TextView>
+<!--                        </TextView>-->
 
                     </LinearLayout>
 

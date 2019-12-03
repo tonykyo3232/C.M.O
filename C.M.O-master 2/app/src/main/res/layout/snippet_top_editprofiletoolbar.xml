@@ -20,8 +20,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="20dp"
                     android:layout_centerVertical="true"
-                    android:id="@+id/backArrow"
-                    android:src="@drawable/ic_action_arrowback">
+                    android:id="@+id/backArrow">
                 </ImageView>
 
                 <TextView

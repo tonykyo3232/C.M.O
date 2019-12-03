@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -57,13 +56,10 @@ public class MainActivity extends AppCompatActivity
     private StorageReference storageRef = storage.getReference();
     private Context mContext = MainActivity.this;
     private static final int ACTIVITY_NUM = 0;
-
     private String saveCurrentDate, saveCurrentTime, postRandomName;
-    //private String outerParent;
 
     String currentUserID;
     Boolean LikeChecker = false;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -72,18 +68,11 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         setupBottomNavigationView();
-        //setUpViewPager();
 
         mAuth = FirebaseAuth.getInstance();
-        //currentUserID = mAuth.getCurrentUser().getUid();
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         PostsRef = FirebaseDatabase.getInstance().getReference().child("Posts");
         LikesRef = FirebaseDatabase.getInstance().getReference().child("Likes");
-
-//        AddNewPostButton = (ImageButton) findViewById(R.id.add_new_post_button);
-//
-//        // comment for now
-//        LogoutButton = (Button) findViewById (R.id.logout_button);
 
         postList = (RecyclerView) findViewById(R.id.all_users_post_list);
         postList.setHasFixedSize(true);
@@ -195,7 +184,6 @@ public class MainActivity extends AppCompatActivity
                                                 Calendar calendarTime = Calendar.getInstance();
                                                 SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss");
                                                 saveCurrentTime = currentTime.format(calendarTime.getTime());
-//                                                postRandomName = saveCurrentDate + ", " + saveCurrentTime;
 
                                                 String [] spiltDateResult = saveCurrentDate.split("/");
                                                 String [] spiltTimeResult = saveCurrentTime.split(":");
@@ -244,7 +232,6 @@ public class MainActivity extends AppCompatActivity
                                                 });
                                                 // ===== by Tony, for debug only
 
-//                                                LikesRef.child(PostKey).child(mAuth.getCurrentUser().getUid()).setValue(true);
                                                 LikeChecker = false;
                                             }
                                         }
@@ -271,7 +258,6 @@ public class MainActivity extends AppCompatActivity
         int countLikes;
         String currentUserId;
         DatabaseReference LikesRef;
-        private String saveCurrentDate_, saveCurrentTime_, postRandomName_;
 
         public PostsViewHolder(View itemView)
         {
@@ -410,11 +396,6 @@ public class MainActivity extends AppCompatActivity
         Menu menu = bottomNavigationViewEx.getMenu();
         MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
         menuItem.setChecked(true);
-
-
-//        Intent intent1 = new Intent(MainActivity.this, MainActivity.class);
-//        startActivity(intent1);
-
     }
 
 
