@@ -25,6 +25,7 @@ import com.example.cmo.Home.ClickPostActivity;
 import com.example.cmo.Home.CommentsActivity;
 import com.example.cmo.Post.Posts;
 import com.example.cmo.R;
+import com.example.cmo.Search.SearchActivity;
 import com.example.cmo.Utils.BottomNavigationViewHelper;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -33,6 +34,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -146,7 +148,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
         Log.d(ProfileActivity.class.getSimpleName(), "Before DisplayAllUsersPosts");
-        DisplayAllUsersPosts();
+        DisplayAllUsersPosts(currentUserID);
         Log.d(ProfileActivity.class.getSimpleName(), "After DisplayAllUsersPosts");
     }
 
@@ -201,8 +203,16 @@ public class ProfileActivity extends AppCompatActivity {
     /**********************************
     // functions for the posts
     **********************************/
-    private void DisplayAllUsersPosts()
+    private void DisplayAllUsersPosts(String currentUserID)
     {
+        Query firebaseSearchQuery = PostsRef.orderByChild("uid").equalTo(currentUserID);
+
+        Log.d(SearchActivity.class.getSimpleName(), "=============================");
+        Log.d(SearchActivity.class.getSimpleName(), "============ DisplayAllUersPost===============");
+        Log.d(SearchActivity.class.getSimpleName(), "============"+currentUserID+ "===============");
+        Log.d(SearchActivity.class.getSimpleName(), "=============================");
+
+
         Log.d(ProfileActivity.class.getSimpleName(), "ProfileActivity - DisplayAllUsersPosts - begin");
         FirebaseRecyclerAdapter<Posts, ProfileActivity.PostsViewHolder> firebaseRecyclerAdapter =
                 new FirebaseRecyclerAdapter<Posts, ProfileActivity.PostsViewHolder>
@@ -210,7 +220,8 @@ public class ProfileActivity extends AppCompatActivity {
                                 Posts.class,
                                 R.layout.all_posts_layout,
                                 ProfileActivity.PostsViewHolder.class,
-                                PostsRef
+//                                PostsRef
+                                firebaseSearchQuery
                         )
                 {
                     @Override
