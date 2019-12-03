@@ -45,7 +45,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private Context mContext = ProfileActivity.this;
     private ProgressBar mprogressBar;
-//    private static final int ACTIVITY_NUM = 3;
+    //    private static final int ACTIVITY_NUM = 3;
     private static final int ACTIVITY_NUM = 4;
 
 
@@ -56,7 +56,7 @@ public class ProfileActivity extends AppCompatActivity {
     private FirebaseStorage storage = FirebaseStorage.getInstance();
 //    private StorageReference storageRef = storage.getReference();
 
-//    private StorageReference storageRefProfile = storage.getReference();
+    //    private StorageReference storageRefProfile = storage.getReference();
     Boolean LikeChecker = false;
     private String currentUserID, temp;
     private int tempInt;
@@ -151,7 +151,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
         Log.d(ProfileActivity.class.getSimpleName(), "Before DisplayAllUsersPosts");
-        DisplayAllUsersPosts();
+        DisplayAllUsersPosts(currentUserID);
         Log.d(ProfileActivity.class.getSimpleName(), "After DisplayAllUsersPosts");
     }
 
@@ -204,13 +204,14 @@ public class ProfileActivity extends AppCompatActivity {
 //    }
 
     /**********************************
-    // functions for the posts
-    **********************************/
-    private void DisplayAllUsersPosts()
+     // functions for the posts
+     **********************************/
+    private void DisplayAllUsersPosts(String currentUserID)
     {
 
         //deceding order
         Query SortPostsInDecedningOrder = PostsRef.orderByChild("counter");
+        Query firebaseSearchQuery = PostsRef.orderByChild("uid").equalTo(currentUserID);
 
         Log.d(ProfileActivity.class.getSimpleName(), "ProfileActivity - DisplayAllUsersPosts - begin");
         FirebaseRecyclerAdapter<Posts, ProfileActivity.PostsViewHolder> firebaseRecyclerAdapter =
@@ -219,7 +220,7 @@ public class ProfileActivity extends AppCompatActivity {
                                 Posts.class,
                                 R.layout.all_posts_layout,
                                 ProfileActivity.PostsViewHolder.class,
-                                SortPostsInDecedningOrder
+                                firebaseSearchQuery
                         )
                 {
                     @Override
@@ -238,61 +239,61 @@ public class ProfileActivity extends AppCompatActivity {
 //                            Log.d(ProfileActivity.class.getSimpleName(), "[ if(model.getUid() == currentUserID) ]:" + position);
 //                            isUserPost = true;
 
-                            viewHolder.setFullname(model.getFullname());
-                            viewHolder.setTime(model.getTime());
-                            viewHolder.setDate(model.getDate());
-                            viewHolder.setDescription(model.getDescription());
-                            viewHolder.setPostLocation(model.getLocation());
-                            viewHolder.setPostimage(getApplicationContext(), img_url);
-                            viewHolder.setProfileimage(getApplicationContext(), model.getUid());
-                            viewHolder.setLikeButtonStatus(PostKey);
+                        viewHolder.setFullname(model.getFullname());
+                        viewHolder.setTime(model.getTime());
+                        viewHolder.setDate(model.getDate());
+                        viewHolder.setDescription(model.getDescription());
+                        viewHolder.setPostLocation(model.getLocation());
+                        viewHolder.setPostimage(getApplicationContext(), img_url);
+                        viewHolder.setProfileimage(getApplicationContext(), model.getUid());
+                        viewHolder.setLikeButtonStatus(PostKey);
 
-                            viewHolder.mView.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent clickPostIntent = new Intent(ProfileActivity.this, ClickPostActivity.class);
-                                    clickPostIntent.putExtra("PostKey", PostKey);
-                                    startActivity(clickPostIntent);
-                                }
-                            });
+                        viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent clickPostIntent = new Intent(ProfileActivity.this, ClickPostActivity.class);
+                                clickPostIntent.putExtra("PostKey", PostKey);
+                                startActivity(clickPostIntent);
+                            }
+                        });
 
-                            viewHolder.CommentPostButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent commentsInent = new Intent(ProfileActivity.this, CommentsActivity.class);
-                                    commentsInent.putExtra("PostKey",PostKey);
-                                    startActivity(commentsInent);
-                                }
-                            });
+                        viewHolder.CommentPostButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent commentsInent = new Intent(ProfileActivity.this, CommentsActivity.class);
+                                commentsInent.putExtra("PostKey",PostKey);
+                                startActivity(commentsInent);
+                            }
+                        });
 
-                            viewHolder.LikePostButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    LikeChecker = true;
-                                    Log.d(ProfileActivity.class.getSimpleName(), "--------Like button clicked---------");
-                                    Log.d(ProfileActivity.class.getSimpleName(), "LikeChecker status " + LikeChecker + ":  ");
+                        viewHolder.LikePostButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                LikeChecker = true;
+                                Log.d(ProfileActivity.class.getSimpleName(), "--------Like button clicked---------");
+                                Log.d(ProfileActivity.class.getSimpleName(), "LikeChecker status " + LikeChecker + ":  ");
 
-                                    LikesRef.addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            if (LikeChecker.equals(true)) {
-                                                if (dataSnapshot.child(PostKey).hasChild(mAuth.getCurrentUser().getUid())) {
-                                                    LikesRef.child(PostKey).child(mAuth.getCurrentUser().getUid()).removeValue();
-                                                    LikeChecker = false;
-                                                    Log.d(ProfileActivity.class.getSimpleName(), "--------Inside Like button clicked---------");
-                                                } else {
-                                                    LikesRef.child(PostKey).child(mAuth.getCurrentUser().getUid()).setValue(true);
-                                                    LikeChecker = false;
-                                                }
+                                LikesRef.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        if (LikeChecker.equals(true)) {
+                                            if (dataSnapshot.child(PostKey).hasChild(mAuth.getCurrentUser().getUid())) {
+                                                LikesRef.child(PostKey).child(mAuth.getCurrentUser().getUid()).removeValue();
+                                                LikeChecker = false;
+                                                Log.d(ProfileActivity.class.getSimpleName(), "--------Inside Like button clicked---------");
+                                            } else {
+                                                LikesRef.child(PostKey).child(mAuth.getCurrentUser().getUid()).setValue(true);
+                                                LikeChecker = false;
                                             }
                                         }
+                                    }
 
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                                        }
-                                    }); // end LikesRef.addValueEventListener
-                                }
-                            }); // end viewHolder.LikePostButton.setOnClickListener
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    }
+                                }); // end LikesRef.addValueEventListener
+                            }
+                        }); // end viewHolder.LikePostButton.setOnClickListener
 //                        }
 //                        else{
 ////                            position++;
