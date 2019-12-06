@@ -40,8 +40,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 public class PostActivity extends AppCompatActivity {
-    //private Toolbar mToolbar;
-    //private ProgressDialog loadingBar;
 
     private Button UpdatePostButton;
     private EditText PostDescription, PostLocation;
@@ -50,14 +48,13 @@ public class PostActivity extends AppCompatActivity {
     private static final int Gallery_Pick = 1;
 
     private Uri ImageUri;
-    private String Description; // Description
+    private String Description;
     private StorageReference PostImageReference; // PostImageRefernce
     private DatabaseReference UserRef, PostsRef;
     private FirebaseAuth mAuth;
 
     private String saveCurrentDate, saveCurrentTime, postRandomName, downloadUrl, current_user_id;
 
-    //
     private long coutPosts = 0;
 
     // By Tony
@@ -65,13 +62,11 @@ public class PostActivity extends AppCompatActivity {
     private Context mContext = PostActivity.this;
     private static final int ACTIVITY_NUM = 2;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(PostActivity.class.getSimpleName(), "==============\nPostActivity - onCreate\n===============");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
-//        setContentView(R.layout.activity_main);
 
         // new: 11/26
         setupBottomNavigationView();
@@ -105,7 +100,6 @@ public class PostActivity extends AppCompatActivity {
 
         Log.d(PostActivity.class.getSimpleName(), "==============\nPostActivity - onCreate - finish\n===============");
     }
-
 
     // Bottom navigation view set up
     private void setupBottomNavigationView()
@@ -143,6 +137,7 @@ public class PostActivity extends AppCompatActivity {
 
     private void StoringImageToFirebaseStorage() {
         Log.d(PostActivity.class.getSimpleName(), "StoringImageToFirebaseStorage\n");
+
         Calendar calendarDate = Calendar.getInstance();
 
         SimpleDateFormat currentDate = new SimpleDateFormat("dd-MMMM-yyyy");
@@ -166,9 +161,9 @@ public class PostActivity extends AppCompatActivity {
                 if(task.isSuccessful()){
                     // Version update!
                     downloadUrl = task.getResult().getStorage().getDownloadUrl().toString();
+                    //downloadUrl = task.getResult().getDownloadUrl().toString(); // old version
 
                     Log.d(SetupActivity.class.getSimpleName(), "StoringImageToFirebaseStorage - onComplete, the downloadUrl is [" + downloadUrl+ "]");
-                    //downloadUrl = task.getResult().getDownloadUrl().toString();
 
                     Toast.makeText(PostActivity.this, "Successful! The new post is added.", Toast.LENGTH_SHORT).show();
 
@@ -184,7 +179,7 @@ public class PostActivity extends AppCompatActivity {
     private void SavingPostInformationToDatabase() {
         Log.d(PostActivity.class.getSimpleName(), "SavingPostInformationToDatabase\n");
 
-        //descending order
+        //Descending order
         PostsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -207,7 +202,6 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d(PostActivity.class.getSimpleName(), "+++++onDataChange+++++\n");
-//                if(dataSnapshot.getChildrenCount() > 0)
                 if(dataSnapshot.exists())
                 {
                     Log.d(PostActivity.class.getSimpleName(), "+++++onDataChange - if(dataSnapshot.exists())+++++\n");
@@ -216,7 +210,6 @@ public class PostActivity extends AppCompatActivity {
 
                     // This doesn't work since sth wrong about the profile image (it shows null....)
                     //String userProfileImage = dataSnapshot.child("profileimage").getValue().toString();
-                    //Log.d(PostActivity.class.getSimpleName(), "+*+*+*+*+*+*+" + userProfileImage + "+*+*+*+*+*+*+\n");
 
                     HashMap postsMap = new HashMap();
                     postsMap.put("uid", current_user_id);
@@ -231,12 +224,9 @@ public class PostActivity extends AppCompatActivity {
                     postsMap.put("image_url", image_url_detail);
                     postsMap.put("location", Location);
 
-                    //descending order
+                    //Descending order
                     postsMap.put("counter",coutPosts);
 
-                    // By Tony no used
-                    //public Posts(String uid, String time, String date, String postimage, String description, String profileimage, String fullname)
-                    //Posts userPost = new Posts(current_user_id, saveCurrentTime, saveCurrentDate, downloadUrl, Description, "", userFullName);
 
                     Log.d(PostActivity.class.getSimpleName(), "postRandomName :[ "+ postRandomName + "]\n");
                     Log.d(PostActivity.class.getSimpleName(), "current_user_id + postRandomName :[ "+ current_user_id + postRandomName + "]\n");
@@ -251,11 +241,9 @@ public class PostActivity extends AppCompatActivity {
 
                                 SendUserToMainActivity();
                                 Toast.makeText(PostActivity.this, "New Posts2 is updated sucessfully", Toast.LENGTH_SHORT).show();
-                                //loadingbar.dismiss();
                             }
                             else{
                                 Toast.makeText(PostActivity.this, "Error Occured while updating your post.", Toast.LENGTH_SHORT).show();
-                                //loadingbar.dismiss();
                             }
                         }
                     });
@@ -263,7 +251,7 @@ public class PostActivity extends AppCompatActivity {
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                // do nothing yet
+
             }
         });
     }

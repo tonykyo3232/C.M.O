@@ -13,10 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-//import android.widget.Toolbar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,39 +37,31 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.squareup.picasso.Picasso;
-import com.twitter.sdk.android.core.models.User;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class ProfileActivity extends AppCompatActivity {
 
     private Context mContext = ProfileActivity.this;
-    private ProgressBar mprogressBar;
-    //    private static final int ACTIVITY_NUM = 3;
     private static final int ACTIVITY_NUM = 4;
-
 
     // For the posts
     private RecyclerView postList;
     private FirebaseAuth mAuth;
     private DatabaseReference UsersRef, PostsRef, LikesRef;
     private FirebaseStorage storage = FirebaseStorage.getInstance();
-//    private StorageReference storageRef = storage.getReference();
 
-    //    private StorageReference storageRefProfile = storage.getReference();
     Boolean LikeChecker = false;
-    private String currentUserID, temp;
-    private int tempInt;
-    private boolean isUserPost = false;
+    private String currentUserID;
+    private String saveCurrentDate, saveCurrentTime, postRandomName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(ProfileActivity.class.getSimpleName(), "ProfileActivity-onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-//        setContentView(R.layout.activity_main);
 
-        // implement later
-//        mprogressBar = (ProgressBar) findViewById(R.id.profileProgressBar);
-//        mprogressBar.setVisibility(View.GONE);
         setupBottomNavigationView();
         setupToolBar();
 
@@ -88,13 +78,12 @@ public class ProfileActivity extends AppCompatActivity {
         linearLayoutManager.setStackFromEnd(true);
         postList.setLayoutManager(linearLayoutManager);
 
-
-        // try later
         // access info for user profile image
         FirebaseStorage storage_ = FirebaseStorage.getInstance();
         StorageReference currentUserRef = storage_.getReference();
         currentUserRef = currentUserRef.child("Profile Images").child(currentUserID + ".jpg");
         Log.d(ProfileActivity.class.getSimpleName(), "find me currentUserRef: " + currentUserRef.toString());
+
         // =======
         currentUserRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -208,9 +197,10 @@ public class ProfileActivity extends AppCompatActivity {
      **********************************/
     private void DisplayAllUsersPosts(String currentUserID)
     {
+        //Descending order
+//        Query SortPostsInDecedningOrder = PostsRef.orderByChild("counter");
 
-        //deceding order
-        Query SortPostsInDecedningOrder = PostsRef.orderByChild("counter");
+        // filter based on the current user
         Query firebaseSearchQuery = PostsRef.orderByChild("uid").equalTo(currentUserID);
 
         Log.d(ProfileActivity.class.getSimpleName(), "ProfileActivity - DisplayAllUsersPosts - begin");
@@ -229,15 +219,6 @@ public class ProfileActivity extends AppCompatActivity {
                         Log.d(ProfileActivity.class.getSimpleName(), "DisplayAllUsersPosts __> ProfileActivity - populateViewHolder");
                         final String PostKey = getRef(position).getKey();
                         String img_url = model.getImage_url();
-
-//                        Log.d(ProfileActivity.class.getSimpleName(), "currentUserID: " + currentUserID + "\n");
-//                        Log.d(ProfileActivity.class.getSimpleName(), "model.getUid(): " + model.getUid() + "\n");
-//                        temp = model.getUid();
-
-//                        if(model.getUid().equals(currentUserID))
-//                        {
-//                            Log.d(ProfileActivity.class.getSimpleName(), "[ if(model.getUid() == currentUserID) ]:" + position);
-//                            isUserPost = true;
 
                         viewHolder.setFullname(model.getFullname());
                         viewHolder.setTime(model.getTime());
@@ -270,19 +251,46 @@ public class ProfileActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 LikeChecker = true;
-                                Log.d(ProfileActivity.class.getSimpleName(), "--------Like button clicked---------");
-                                Log.d(ProfileActivity.class.getSimpleName(), "LikeChecker status " + LikeChecker + ":  ");
 
                                 LikesRef.addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        if (LikeChecker.equals(true)) {
-                                            if (dataSnapshot.child(PostKey).hasChild(mAuth.getCurrentUser().getUid())) {
+                                        if(LikeChecker.equals(true)) {
+                                            if(dataSnapshot.child(PostKey).hasChild(mAuth.getCurrentUser().getUid())) {
+
+                                                // when user remove like
                                                 LikesRef.child(PostKey).child(mAuth.getCurrentUser().getUid()).removeValue();
                                                 LikeChecker = false;
-                                                Log.d(ProfileActivity.class.getSimpleName(), "--------Inside Like button clicked---------");
                                             } else {
-                                                LikesRef.child(PostKey).child(mAuth.getCurrentUser().getUid()).setValue(true);
+
+                                                // when user type like
+
+                                                //======
+                                                Calendar calendarDate = Calendar.getInstance();
+
+                                                SimpleDateFormat currentDate = new SimpleDateFormat("dd/MMMM/yyyy");
+                                                saveCurrentDate = currentDate.format(calendarDate.getTime());
+
+                                                Calendar calendarTime = Calendar.getInstance();
+                                                SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss");
+                                                saveCurrentTime = currentTime.format(calendarTime.getTime());
+
+                                                String [] spiltDateResult = saveCurrentDate.split("/");
+                                                String [] spiltTimeResult = saveCurrentTime.split(":");
+
+                                                String day = spiltDateResult[0];
+                                                String month = spiltDateResult[1];
+                                                String year = spiltDateResult[2];
+
+                                                String hours = spiltTimeResult[0];
+                                                String mins = spiltTimeResult[1];
+                                                String secs = spiltTimeResult[2];
+
+                                                postRandomName = month + "/" + day + "/" + year + ", " + hours + ":" + mins;
+                                                LikesRef.child(PostKey).child(mAuth.getCurrentUser().getUid()).setValue(postRandomName);
+                                                //======
+
+//                                                LikesRef.child(PostKey).child(mAuth.getCurrentUser().getUid()).setValue(true);
                                                 LikeChecker = false;
                                             }
                                         }
@@ -292,30 +300,18 @@ public class ProfileActivity extends AppCompatActivity {
                                     public void onCancelled(@NonNull DatabaseError databaseError) {
                                     }
                                 }); // end LikesRef.addValueEventListener
+
                             }
                         }); // end viewHolder.LikePostButton.setOnClickListener
-//                        }
-//                        else{
-////                            position++;
-//                            tempInt = position;
-//                        }
+
                     } // end populateViewHolder
                 };
-//        if(isUserPost)
-
-//        Log.d(ProfileActivity.class.getSimpleName(), "...When setAdapter...\n");
-//        Log.d(ProfileActivity.class.getSimpleName(), "Position: "+ tempInt + "\n");
-//        Log.d(ProfileActivity.class.getSimpleName(), "currentUserID: " + currentUserID + "\n");
-//        Log.d(ProfileActivity.class.getSimpleName(), "model.getUid(): " + temp + "\n");
-
         postList.setAdapter(firebaseRecyclerAdapter);
     }
 
     public static class PostsViewHolder extends RecyclerView.ViewHolder
     {
         View mView;
-        DatabaseReference PostsRef_ = FirebaseDatabase.getInstance().getReference().child("Posts");
-
         ImageButton LikePostButton, CommentPostButton;
         TextView DisplayNoOfLikes;
         int countLikes;
@@ -365,7 +361,6 @@ public class ProfileActivity extends AppCompatActivity {
         public void setFullname(String fullname)
         {
             TextView username = (TextView) mView.findViewById(R.id.post_user_name);
-//            username.setText("Tony Lee");
             username.setText(fullname);
         }
 
@@ -380,9 +375,11 @@ public class ProfileActivity extends AppCompatActivity {
             // access info for user profile image
             storageRefProfile = storageRefProfile.child("Profile Images").child(userId + ".jpg");
 
-            Log.d(ProfileActivity.class.getSimpleName(), "setProfileimage - before [if (storageRefProfile != null)] ...\n");
-            Log.d(ProfileActivity.class.getSimpleName(), "storageRefProfile: [ " + storageRefProfile.toString() + "]\n");
-            Log.d(ProfileActivity.class.getSimpleName(), "currentUserId: [ " + userId + "]\n");
+//            // debug
+//            Log.d(ProfileActivity.class.getSimpleName(), "setProfileimage - before [if (storageRefProfile != null)] ...\n");
+//            Log.d(ProfileActivity.class.getSimpleName(), "storageRefProfile: [ " + storageRefProfile.toString() + "]\n");
+//            Log.d(ProfileActivity.class.getSimpleName(), "currentUserId: [ " + userId + "]\n");
+
             // be to be careful when storageRefProfile is null reference, meaning that
             if (storageRefProfile != null){
                 Log.d(ProfileActivity.class.getSimpleName(), "setProfileimage - INSIDE [if (storageRefProfile != null)] ...\n");
@@ -409,21 +406,20 @@ public class ProfileActivity extends AppCompatActivity {
         public void setDate(String date)
         {
             TextView PostDate = (TextView) mView.findViewById(R.id.post_date);
-//            PostDate.setText("    " + "11/10/2019");
             PostDate.setText("  " + date);
         }
 
         public void setDescription(String description)
         {
             TextView PostDescription = (TextView) mView.findViewById(R.id.post_description);
-//            PostDescription.setText("This is a post...");
             PostDescription.setText(description);
         }
 
         public void setPostimage(Context ctx1, String postimage)
         {
             Log.d(ProfileActivity.class.getSimpleName(), "ProfileActivity - setPostimage");
-            // by website
+
+
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference().child("Posts Images").child(postimage);
             storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -438,22 +434,9 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             });
 
-//            // useless code
-//            StorageReference gsReference = storage.getReferenceFromUrl(storageRef.toString());
-//            Log.d(MainActivity.class.getSimpleName(), "gsReference: [" + storageRef.toString() + "]\n===============");
-
             Log.d(ProfileActivity.class.getSimpleName(), "==============\nstorageRef: [" + storageRef.toString() + "]\n===============");
-
-            //==================================================================
-
-            // works, but hard-coding
-//            String str = "https://firebasestorage.googleapis.com/v0/b/cmofirebaseproject.appspot.com/o/Posts%20Images%2Fimage%3A8810-November-201900%3A48.jpg?alt=media&token=c1d6471d-2426-4614-aea1-dbc238551ede";
-//            Picasso.get().load(str).into(PostImage);
-            //Picasso.get().load(postimage).into(PostImage);
-
         }
 
-        // new
         public void setPostLocation(String location)
         {
             Log.d(ProfileActivity.class.getSimpleName(), "setPostLocation - " + location);

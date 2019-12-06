@@ -39,7 +39,6 @@ public class SetupActivity extends AppCompatActivity {
     private EditText UserName, FullName, Country;
     private Button SaveInformation;
     private ImageView ProfileImage;
-//    private ProgressDialog loadingBar;
 
     private FirebaseAuth mAuth;
     private DatabaseReference UsersRef;
@@ -65,7 +64,7 @@ public class SetupActivity extends AppCompatActivity {
         // By Tony
         storage = FirebaseStorage.getInstance();
 
-        // Tony: trying to work on
+        // By Tony
         UserProfileImageRef = FirebaseStorage.getInstance().getReference().child("Profile Images");
 
         UserName = (EditText) findViewById(R.id.setup_username);
@@ -73,7 +72,7 @@ public class SetupActivity extends AppCompatActivity {
         Country = (EditText) findViewById(R.id.setup_country);
         SaveInformation = (Button) findViewById(R.id.setup_button);
 
-        // tony: trying to work on
+        // By Tony
         ProfileImage = (ImageView) findViewById(R.id.setup_image);
 
         SaveInformation.setOnClickListener(new View.OnClickListener(){
@@ -98,9 +97,6 @@ public class SetupActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
                     Log.d(SetupActivity.class.getSimpleName(), "==============\nSetupActivity - onDataChange\n===============");
-                    //save profile image failed (video 15)
-                    //String image = dataSnapshot.child("profileimage").getValue().toString();
-                    //Picasso.get().load(image).placeholder(R.drawable.profile).into(ProfileImage);
                     Log.d(SetupActivity.class.getSimpleName(), "dataSnapshot.getChildren().toString(); => " + dataSnapshot.getChildren().toString());
                     Log.d(SetupActivity.class.getSimpleName(), "==============\nSetupActivity - onDataChange - if(dataSnapshot.exists()) == TRUE\n===============");
                 }

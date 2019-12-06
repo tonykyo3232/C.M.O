@@ -3,7 +3,6 @@ package com.example.cmo.Profile;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.cmo.Account.SetupActivity;
 import com.example.cmo.R;
 import com.example.cmo.Utils.UniversalImageLoader;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,9 +30,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.picasso.Picasso;
-import com.twitter.sdk.android.core.models.User;
-
 import java.util.HashMap;
+
+import static android.app.Activity.RESULT_OK;
+
 
 public class EditProfileFragment extends Fragment {
 
@@ -55,12 +54,26 @@ public class EditProfileFragment extends Fragment {
     private TextView userNameText;
     private TextView fullNameText;
     private TextView countryText;
+    private TextView changeProfileText;
+
+    private Uri ImageUri;
+
+    final static int Gallery_Pick = 1;
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == Gallery_Pick && resultCode == RESULT_OK && data != null){
+            ImageUri = data.getData();
+            mprofilephoto.setImageURI(ImageUri); // not sure this one
+        }
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        // By Tony -----------------------------------------------
         view = inflater.inflate(R.layout.fragment_editprofile, container, false);
 
         mprofilephoto = (ImageView) view.findViewById(R.id.profile_photo_editprofile);
@@ -72,12 +85,15 @@ public class EditProfileFragment extends Fragment {
         // By Tony
         updateBtn = (Button) view.findViewById(R.id.btn_update);
 
+        changeProfileText = (TextView) view.findViewById(R.id.changeProfilePhoto);
+
         initImageLoader();
 
         setProfileImage();
 
         setUserInfo();
 
+        // when "update" button is clicked, it will update the FileBase data
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,7 +121,7 @@ public class EditProfileFragment extends Fragment {
                                     if(task.isSuccessful()){
                                         Intent intent = new Intent(getActivity(), AccountSettingsActivity.class);
                                         startActivity(intent);
-                                        Toast.makeText(getActivity(), "Profile image store to firebase",Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getActivity(), "New information store to firebase...",Toast.LENGTH_SHORT).show();
                                     }
                                     else{
                                         Toast.makeText(getActivity(), "Failed to update the info...",Toast.LENGTH_SHORT).show();
@@ -124,6 +140,21 @@ public class EditProfileFragment extends Fragment {
             }
         });
 
+
+        // ********************recently added
+        changeProfileText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent galleryIntent = new Intent();
+                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                galleryIntent.setType("image/*");
+                startActivityForResult(galleryIntent, Gallery_Pick);
+            }
+        });
+
+
+        // ********************recently added
+
         ImageView backArrow = (ImageView) view.findViewById(R.id.backArrow);
         backArrow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,6 +171,7 @@ public class EditProfileFragment extends Fragment {
     private void initImageLoader(){
         UniversalImageLoader universalImageLoader = new UniversalImageLoader(getActivity());
         ImageLoader.getInstance().init(universalImageLoader.getConfig());
+        ImageLoader.getInstance().init(universalImageLoader.getConfig());
     }
 
     private void setProfileImage(){
@@ -148,7 +180,7 @@ public class EditProfileFragment extends Fragment {
 //        UniversalImageLoader.setImage(imgURL, mprofilephoto, null, "https://");
 
         // By Tony -----------------------------------------------
-        // access the FireBase reference
+        // Access the FireBase reference
         FirebaseStorage storage_ = FirebaseStorage.getInstance();
         StorageReference currentUserRef = storage_.getReference();
         currentUserRef = currentUserRef.child("Profile Images").child(currentUserID + ".jpg");
@@ -170,10 +202,10 @@ public class EditProfileFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+
                     String fullName = userSnapshot.child("fullname").getValue(String.class);
                     String userName = userSnapshot.child("username").getValue(String.class);
                     String country = userSnapshot.child("country").getValue(String.class);
-
 
                     // find the following place to put the text
                     userNameText = (TextView) view.findViewById(R.id.username);
