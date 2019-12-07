@@ -3,6 +3,7 @@ package com.example.cmo.Profile;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.cmo.Account.SetupActivity;
+import com.example.cmo.Post.PostActivity;
 import com.example.cmo.R;
 import com.example.cmo.Utils.UniversalImageLoader;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -28,8 +31,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
+
 import java.util.HashMap;
 
 import static android.app.Activity.RESULT_OK;
@@ -44,7 +51,6 @@ public class EditProfileFragment extends Fragment {
     private View view;
     String currentUserID;
 
-
     private String newUserName;
     private String newFullName;
     private String newCountry;
@@ -57,18 +63,15 @@ public class EditProfileFragment extends Fragment {
     private TextView changeProfileText;
 
     private Uri ImageUri;
+    private StorageReference UserProfileImageRef;
+
+    //===
+    private CropImage.ActivityResult result; // not sure about this
+    private Uri resultUri;
+    private StorageReference filePath;
+    //===
 
     final static int Gallery_Pick = 1;
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(requestCode == Gallery_Pick && resultCode == RESULT_OK && data != null){
-            ImageUri = data.getData();
-            mprofilephoto.setImageURI(ImageUri); // not sure this one
-        }
-    }
 
     @Nullable
     @Override
@@ -85,7 +88,10 @@ public class EditProfileFragment extends Fragment {
         // By Tony
         updateBtn = (Button) view.findViewById(R.id.btn_update);
 
+        // 12/6
         changeProfileText = (TextView) view.findViewById(R.id.changeProfilePhoto);
+
+        UserProfileImageRef = FirebaseStorage.getInstance().getReference().child("Profile Images");
 
         initImageLoader();
 
@@ -137,11 +143,28 @@ public class EditProfileFragment extends Fragment {
                     }
                 });
                 // ****
-            }
+
+                filePath = UserProfileImageRef.child(currentUserID + ".jpg");
+                //storing img to FireBase...
+                filePath.putFile(ImageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                        if(task.isSuccessful()){
+                            Toast.makeText(getActivity(), "Successful! The new profile image is added.", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            String message = task.getException().getMessage();
+                            Toast.makeText(getActivity(), "Failed to update profile image, " + message, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                //-------
+
+            } // end Onclick
         });
 
 
-        // ********************recently added
+        // ********************recently added (12/6)
         changeProfileText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -152,8 +175,7 @@ public class EditProfileFragment extends Fragment {
             }
         });
 
-
-        // ********************recently added
+        // ********************recently added (12/6)
 
         ImageView backArrow = (ImageView) view.findViewById(R.id.backArrow);
         backArrow.setOnClickListener(new View.OnClickListener() {
@@ -166,6 +188,24 @@ public class EditProfileFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == Gallery_Pick && resultCode == RESULT_OK && data != null){
+            ImageUri = data.getData();
+
+            CropImage.activity()
+                    .setGuidelines(CropImageView.Guidelines.ON)
+                    .setAspectRatio(1,1)
+                    .start(getActivity());
+
+            mprofilephoto.setImageURI(ImageUri);
+        }
+
+        Log.d(getClass().getSimpleName(), "tonykyo3232 - debug" + "\n");
     }
 
     private void initImageLoader(){
