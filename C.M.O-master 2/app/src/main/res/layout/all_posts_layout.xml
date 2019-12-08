@@ -182,7 +182,7 @@
                     android:id="@+id/comment_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="190dp"
+                    android:layout_marginLeft="100dp"
                     android:baselineAlignBottom="false"
                     android:src="@drawable/comment"
                     >

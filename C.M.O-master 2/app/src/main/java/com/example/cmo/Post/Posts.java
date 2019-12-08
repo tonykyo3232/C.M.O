@@ -41,7 +41,7 @@ public class Posts
     }
 
     public void setDate(String date) {
-        this.date = date;
+        t  his.date = date;
     }
 
     public String getPostimage() {

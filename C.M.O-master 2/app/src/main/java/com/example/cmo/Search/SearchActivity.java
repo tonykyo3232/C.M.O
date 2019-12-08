@@ -71,7 +71,7 @@ public class SearchActivity extends AppCompatActivity {
         mSearchField = (EditText) findViewById (R.id.search_bar);
         mSearchBtn = (Button) findViewById(R.id.search_button);
 
-        mResultList = (RecyclerView) findViewById(R.id.all_users_post_list);
+        mResultList = (RecyclerView) findViewById(R.id.default_all_users_like_list);
         mResultList.setHasFixedSize(true);
         mResultList.setLayoutManager(new LinearLayoutManager(this));
 
