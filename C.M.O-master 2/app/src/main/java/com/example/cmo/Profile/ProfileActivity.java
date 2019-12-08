@@ -55,6 +55,8 @@ public class ProfileActivity extends AppCompatActivity {
     Boolean LikeChecker = false;
     private String currentUserID;
     private String saveCurrentDate, saveCurrentTime, postRandomName;
+    private int postCount = 0;
+    private TextView postNum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +66,9 @@ public class ProfileActivity extends AppCompatActivity {
 
         setupBottomNavigationView();
         setupToolBar();
+
+        postNum = (TextView) findViewById(R.id.tvPosts);
+        postNum.setText(String.valueOf(postCount));
 
         // For the posts
         mAuth = FirebaseAuth.getInstance();
@@ -131,9 +136,7 @@ public class ProfileActivity extends AppCompatActivity {
 
             }
         });
-        Log.d(ProfileActivity.class.getSimpleName(), "Before DisplayAllUsersPosts");
         DisplayAllUsersPosts(currentUserID);
-        Log.d(ProfileActivity.class.getSimpleName(), "After DisplayAllUsersPosts");
     }
 
 
@@ -164,7 +167,6 @@ public class ProfileActivity extends AppCompatActivity {
         Menu menu = bottomNavigationViewEx.getMenu();
         MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
         menuItem.setChecked(true);
-        Log.d(ProfileActivity.class.getSimpleName(), "ProfileActivity - setupBottomNavigationView - finish");
     }
 
     /**********************************
@@ -191,6 +193,10 @@ public class ProfileActivity extends AppCompatActivity {
                     @Override
                     protected void populateViewHolder(ProfileActivity.PostsViewHolder viewHolder, Posts model, int position)
                     {
+                        postCount++;
+
+                        // display number of posts
+                        postNum.setText(String.valueOf(postCount));
                         final String PostKey = getRef(position).getKey();
                         String img_url = model.getImage_url();
 

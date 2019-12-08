@@ -64,8 +64,10 @@ public class EditProfileFragment extends Fragment {
 
     private StorageReference filePath;
     private DatabaseReference PostsRef;
+    private DatabaseReference PostsRef_;
     private boolean changeImg = false;
     private HashMap updateMap_;
+    private HashMap updateMap_2;
 
     final static int Gallery_Pick = 1;
 
@@ -179,17 +181,65 @@ public class EditProfileFragment extends Fragment {
                                                 @Override
                                                 public void onComplete(@NonNull Task task) {
                                                     if (task.isSuccessful()) {
-//                                                        Intent intent = new Intent(getActivity(), AccountSettingsActivity.class);
-//                                                        startActivity(intent);
-                                                    } else {
-                                                        Log.d(getClass().getSimpleName(), "hell no!" + "\n");
+
+                                                    }
+                                                    else {
+                                                        Log.d(getClass().getSimpleName(), "failed to update username in posts..." + "\n");
                                                     }
                                                 }
                                             });
-                                }
+                                } // end if(currentUserID.equals(userSnapshot.child("uid").getValue(String.class))...
+
+                                // if the post has comment, also update the username inside the Comments
+                                if(userSnapshot.hasChild("Comments")){
+                                    Log.d(getClass().getSimpleName(), "PostsRef_ - if(userSnapshot.hasChild(Comments)" + "\n");
+                                    newUserName = userNameText.getText().toString();
+                                    Log.d(getClass().getSimpleName(), "newUserName: " + newUserName + "\n");
+
+                                    updateMap_2 = new HashMap();
+                                    updateMap_2.put("username", newUserName);
+
+                                    PostsRef_ = PostsRef.child(userSnapshot.getKey()).child("Comments"); // sth wrong here
+                                    PostsRef_.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            Log.d(getClass().getSimpleName(), "PostsRef_ - onDataChange" + "\n");
+                                            for (DataSnapshot userSnapshot_ : dataSnapshot.getChildren()) {
+                                                if(currentUserID.equals(userSnapshot_.child("uid").getValue(String.class))
+                                                        && userSnapshot_.child("username").getValue(String.class) != newUserName){
+
+                                                    Log.d(getClass().getSimpleName(), "PostsRef_ - onDataChange - if happens..." + "\n");
+
+                                                    Log.d(getClass().getSimpleName(), "currentUserID: " + currentUserID + "\n");
+                                                    Log.d(getClass().getSimpleName(), "userSnapshot_.child(\"uid\").getValue(String.class): " + userSnapshot_.child("uid").getValue(String.class) + "\n");
+                                                    Log.d(getClass().getSimpleName(), "userSnapshot_.getKey(): " + userSnapshot_.getKey() + "\n");
+
+                                                    PostsRef_.child(userSnapshot_.getKey()).updateChildren(updateMap_2).addOnCompleteListener(new OnCompleteListener() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task task) {
+                                                            if (task.isSuccessful()) {
+                                                                Log.d(getClass().getSimpleName(), "PostsRef_ - onDataChange - onComplete" + "\n");
+                                                            }
+                                                            else {
+                                                                Log.d(getClass().getSimpleName(), "failed to update username in comments..." + "\n");
+                                                            }
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+
+                                    }); // end PostsRef_.addValueEventListener
+
+                                }// end if(userSnapshot.hasChild("Comments")
                             }
                         }
-                    }
+                    } // end PostsRef - onDataChange
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
