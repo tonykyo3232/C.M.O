@@ -10,7 +10,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,13 +24,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Comment;
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Random;
 
 public class CommentsActivity extends AppCompatActivity {
 

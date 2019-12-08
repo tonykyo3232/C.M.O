@@ -5,9 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import android.support.v4.app.*;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.cmo.R;

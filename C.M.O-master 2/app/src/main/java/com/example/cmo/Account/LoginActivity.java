@@ -35,7 +35,6 @@ public class LoginActivity extends AppCompatActivity {
     //spalsh
     RelativeLayout rellay1, rellay2;
 
-
     Handler handler = new Handler();
     Runnable runnable = new Runnable() {
         @Override
@@ -78,7 +77,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 AllowingUserToLogin();
             }
-
         });
 
     }

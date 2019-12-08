@@ -277,14 +277,14 @@ public class MainActivity extends AppCompatActivity
             // access info for user profile image
             storageRefProfile = storageRefProfile.child("Profile Images").child(userId + ".jpg");
 
-            // be to be careful when storageRefProfile is null reference, meaning that
+            // be to be careful when storageRefProfile is null reference
             if (storageRefProfile != null){
                 storageRefProfile.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
                         String img_uri = uri.toString();
                         ImageView PostImage = (ImageView) mView.findViewById(R.id.postpro);
-                        Picasso.get().load(img_uri).into(PostImage); // crash
+                        Picasso.get().load(img_uri).into(PostImage);
                     }
                 });
             }

@@ -108,27 +108,22 @@ public class SetupActivity extends AppCompatActivity {
             }
         });
 
-        // By Tony
-        // ******************************************
+        // to display the photo to screen that we choose for profile
         if (storage.getReference() != null)
         {
             storageRef = storage.getReference().child("Profile Images").child(currentUserID + ".jpg");
-
-            Log.d(SetupActivity.class.getSimpleName(), "currentUserID: " + currentUserID + ".jpg");
+//            Log.d(SetupActivity.class.getSimpleName(), "currentUserID: " + currentUserID + ".jpg");
 
             storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
-                    Log.d(SetupActivity.class.getSimpleName(), "==============\n[Before] onDataChange - onSuccess \n===============");
                     String img_uri = uri.toString();
-                    Log.d(SetupActivity.class.getSimpleName(), "img_uri: " + img_uri + "\n");
+//                    Log.d(SetupActivity.class.getSimpleName(), "img_uri: " + img_uri + "\n");
                     ImageView PostImage = (ImageView) findViewById(R.id.setup_image);
                     Picasso.get().load(img_uri).into(PostImage);
-                    Log.d(SetupActivity.class.getSimpleName(), "==============\n[After] onDataChange - onSuccess \n===============");
                 }
             });
         }
-        // ******************************************
     }
 
     @Override
@@ -136,10 +131,7 @@ public class SetupActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == Gallery_Pick && resultCode == RESULT_OK && data != null){
-            Uri ImageUri = data.getData();
-
-//            // By Tony
-//            ProfileImage.setImageURI(ImageUri);
+//            Uri ImageUri = data.getData();
 
             CropImage.activity()
                     .setGuidelines(CropImageView.Guidelines.ON)
@@ -161,10 +153,8 @@ public class SetupActivity extends AppCompatActivity {
                         if(task.isSuccessful()){
                             Toast.makeText(SetupActivity.this, "image stored to firebase",Toast.LENGTH_SHORT).show();
 
-                            // ==============================================================================================
                             final String downloadUrl = task.getResult().getUploadSessionUri().toString();
                             Log.d(SetupActivity.class.getSimpleName(), "downloadUrl: " + downloadUrl + "\n");
-
 
                             UsersRef.child("profileimage").setValue(downloadUrl)
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -181,8 +171,6 @@ public class SetupActivity extends AppCompatActivity {
                                             }
                                         }
                                     });
-                            // ==============================================================================================
-
                         }
                     }
                 });

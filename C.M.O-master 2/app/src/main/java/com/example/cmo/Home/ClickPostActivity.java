@@ -64,15 +64,11 @@ public class ClickPostActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 if(dataSnapshot.exists()){
-                    //image = dataSnapshot.child("postimage").getValue().toString();
                     description = dataSnapshot.child("description").getValue().toString();
                     databaseUserID = dataSnapshot.child("uid").getValue().toString();
                     PostDescription.setText(description);
-
                     image = dataSnapshot.child("image_url").getValue().toString();
-//                    Picasso.get().load(image).into(PostImage);
 
-                    // ====================================
                     FirebaseStorage storage = FirebaseStorage.getInstance();
                     StorageReference storageRef = storage.getReference().child("Posts Images").child(image);
                     storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -83,7 +79,6 @@ public class ClickPostActivity extends AppCompatActivity {
                             Picasso.get().load(img_uri).into(PostImage);
                         }
                     });
-                    // ====================================
 
                     if(currentUserID.equals(databaseUserID)){
                         DeletePostButton.setVisibility(View.VISIBLE);
@@ -131,7 +126,7 @@ public class ClickPostActivity extends AppCompatActivity {
             }
         });
 
-        builder.setNegativeButton("Canel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                dialog.cancel();

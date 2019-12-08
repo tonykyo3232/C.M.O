@@ -3,7 +3,6 @@ package com.example.cmo.Profile;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -19,15 +18,8 @@ import android.widget.RelativeLayout;
 import com.example.cmo.R;
 import com.example.cmo.Utils.BottomNavigationViewHelper;
 import com.example.cmo.Utils.SectionsStatePagerAdapter;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
-import com.squareup.picasso.Picasso;
-import com.twitter.sdk.android.core.models.TwitterCollection;
 
 import java.util.ArrayList;
 

@@ -134,9 +134,6 @@ public class AlertActivity extends AppCompatActivity {
 
         View mView;
 
-//        String currentUserId;
-//        DatabaseReference LikesRef;
-
         public LikesViewHolder(View itemView) {
             super(itemView);
             mView = itemView;
@@ -145,7 +142,6 @@ public class AlertActivity extends AppCompatActivity {
         public void setUsername(final String currUserID){
             Log.d(AlertActivity.class.getSimpleName(), "setUsername" + "\n");
             TextView tvUsername = mView.findViewById(R.id.likeuser);
-//            tvUsername.setText(userName);
 
             // local val of FireBase
             DatabaseReference UsersRef_ = FirebaseDatabase.getInstance().getReference().child("Users");
@@ -170,8 +166,6 @@ public class AlertActivity extends AppCompatActivity {
 
                 }
             });
-            // for hard coding only
-//            tvUsername.setText("tonykyo3232");
         }
 
         public void setLikMsg(){
@@ -182,12 +176,11 @@ public class AlertActivity extends AppCompatActivity {
         public void setTime(String likeTime){
             TextView tvTime = mView.findViewById(R.id.likedate);
             tvTime.setText(likeTime);
-//            tvTime.setText("12/2/2019, 2:39");
         }
 
         public void setLikeUserImg(String userID){
-            Log.d(AlertActivity.class.getSimpleName(), "Debug-setLikeUserImg" + "\n");
-            Log.d(AlertActivity.class.getSimpleName(), "setLikeUserImg->userID: " + userID + "\n");
+//            Log.d(AlertActivity.class.getSimpleName(), "Debug-setLikeUserImg" + "\n");
+//            Log.d(AlertActivity.class.getSimpleName(), "setLikeUserImg->userID: " + userID + "\n");
 
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRefProfile = storage.getReference();
@@ -200,10 +193,10 @@ public class AlertActivity extends AppCompatActivity {
                 storageRefProfile.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        Log.d(AlertActivity.class.getSimpleName(), "onSuccess-Debug-setLikeUserImg" + "\n");
-                        Log.d(AlertActivity.class.getSimpleName(), "setLikeUserImg's onSuccess" + "\n");
+//                        Log.d(AlertActivity.class.getSimpleName(), "onSuccess-Debug-setLikeUserImg" + "\n");
+//                        Log.d(AlertActivity.class.getSimpleName(), "setLikeUserImg's onSuccess" + "\n");
                         String img_uri = uri.toString();
-                        Log.d(AlertActivity.class.getSimpleName(), "onSuccess-img_uri: " + img_uri + "\n");
+//                        Log.d(AlertActivity.class.getSimpleName(), "onSuccess-img_uri: " + img_uri + "\n");
                         ImageView tvImg = mView.findViewById(R.id.likeuserphoto);
                         Picasso.get().load(img_uri).into(tvImg);
                     }

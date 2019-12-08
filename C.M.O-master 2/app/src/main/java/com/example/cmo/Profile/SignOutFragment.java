@@ -22,17 +22,13 @@ import com.google.firebase.auth.FirebaseAuth;
 public class SignOutFragment extends Fragment {
 
     private TextView tvSignOut;
-
-    //by Tony
     private FirebaseAuth mAuth;
-
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_signout, container, false);
         tvSignOut = (TextView) view.findViewById(R.id.tvConfirmSignout);
         Button btnConfirmSignout = (Button) view.findViewById(R.id.btnConfirmSignout);
         mAuth = FirebaseAuth.getInstance();
-
 
         btnConfirmSignout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,16 +42,4 @@ public class SignOutFragment extends Fragment {
         });
         return  view;
     }
-
-//    @Override
-//    public void onCreate(@Nullable Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//
-//        mAuth = FirebaseAuth.getInstance();
-//        mAuth.signOut();
-//        Intent loginIntent = new Intent(SignOutFragment.this, LoginActivity.class);
-//        loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//        startActivity(loginIntent);
-//        finish();
-//    }
 }

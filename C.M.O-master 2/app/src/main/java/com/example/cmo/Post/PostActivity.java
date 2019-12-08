@@ -68,7 +68,6 @@ public class PostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
 
-        // new: 11/26
         setupBottomNavigationView();
 
         mAuth = FirebaseAuth.getInstance();
@@ -150,9 +149,8 @@ public class PostActivity extends AppCompatActivity {
         postRandomName = saveCurrentDate + saveCurrentTime;
 
         StorageReference filePath = PostImageReference.child("Posts Images").child(ImageUri.getLastPathSegment() + postRandomName + ".jpg");
-        Log.d(PostActivity.class.getSimpleName(), "filePath: "+ filePath.toString() + "\n");
+//        Log.d(PostActivity.class.getSimpleName(), "filePath: "+ filePath.toString() + "\n");
 
-        // By Tony
         image_url_detail = ImageUri.getLastPathSegment() + postRandomName + ".jpg";
 
         filePath.putFile(ImageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
@@ -197,19 +195,15 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
-//        UserRef.child(current_user_id).addValueEventListener(new ValueEventListener() {
         UserRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(PostActivity.class.getSimpleName(), "+++++onDataChange+++++\n");
+//                Log.d(PostActivity.class.getSimpleName(), "+++++onDataChange+++++\n");
                 if(dataSnapshot.exists())
                 {
-                    Log.d(PostActivity.class.getSimpleName(), "+++++onDataChange - if(dataSnapshot.exists())+++++\n");
+//                    Log.d(PostActivity.class.getSimpleName(), "+++++onDataChange - if(dataSnapshot.exists())+++++\n");
                     String userFullName = dataSnapshot.child("fullname").getValue().toString();
-                    Log.d(PostActivity.class.getSimpleName(), "+*+*+*+*+*+*+" + userFullName + "+*+*+*+*+*+*+\n");
-
-                    // This doesn't work since sth wrong about the profile image (it shows null....)
-                    //String userProfileImage = dataSnapshot.child("profileimage").getValue().toString();
+//                    Log.d(PostActivity.class.getSimpleName(), "+*+*+*+*+*+*+" + userFullName + "+*+*+*+*+*+*+\n");
 
                     HashMap postsMap = new HashMap();
                     postsMap.put("uid", current_user_id);
@@ -217,19 +211,13 @@ public class PostActivity extends AppCompatActivity {
                     postsMap.put("time", saveCurrentTime);
                     postsMap.put("description", Description);
                     postsMap.put("postimage", downloadUrl);
-                    //postsMap.put("profileimage", userProfileImage);
                     postsMap.put("fullname", userFullName);
-
-                    // By Tony
                     postsMap.put("image_url", image_url_detail);
                     postsMap.put("location", Location);
+                    postsMap.put("counter",coutPosts); //Descending order
 
-                    //Descending order
-                    postsMap.put("counter",coutPosts);
-
-
-                    Log.d(PostActivity.class.getSimpleName(), "postRandomName :[ "+ postRandomName + "]\n");
-                    Log.d(PostActivity.class.getSimpleName(), "current_user_id + postRandomName :[ "+ current_user_id + postRandomName + "]\n");
+//                    Log.d(PostActivity.class.getSimpleName(), "postRandomName :[ "+ postRandomName + "]\n");
+//                    Log.d(PostActivity.class.getSimpleName(), "current_user_id + postRandomName :[ "+ current_user_id + postRandomName + "]\n");
 
                     // userID + date + time
                     // Example: ClUQj4aEolO9JuZPid6iIAibA9n210-November-201915:02
@@ -237,8 +225,7 @@ public class PostActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(Task task) {
                             if(task.isSuccessful()){
-                                Log.d(PostActivity.class.getSimpleName(), "+++++SavingPostInformationToDatabase - if(task.isSuccessful())+++++\n");
-
+//                                Log.d(PostActivity.class.getSimpleName(), "+++++SavingPostInformationToDatabase - if(task.isSuccessful())+++++\n");
                                 SendUserToMainActivity();
                                 Toast.makeText(PostActivity.this, "New Posts2 is updated sucessfully", Toast.LENGTH_SHORT).show();
                             }
@@ -271,8 +258,6 @@ public class PostActivity extends AppCompatActivity {
         if(requestCode == Gallery_Pick && resultCode == RESULT_OK && data != null){
             ImageUri = data.getData();
             SelectPostImage.setImageURI(ImageUri);
-
-            // by Tony
             image_url_detail = ImageUri.toString();
         }
         Log.d(PostActivity.class.getSimpleName(), "onActivityResult - finish\n");

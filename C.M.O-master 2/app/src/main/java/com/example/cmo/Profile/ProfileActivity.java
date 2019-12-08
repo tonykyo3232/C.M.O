@@ -84,37 +84,29 @@ public class ProfileActivity extends AppCompatActivity {
         currentUserRef = currentUserRef.child("Profile Images").child(currentUserID + ".jpg");
         Log.d(ProfileActivity.class.getSimpleName(), "find me currentUserRef: " + currentUserRef.toString());
 
-        // =======
         currentUserRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                Log.d(ProfileActivity.class.getSimpleName(), "find_me");
-                Log.d(ProfileActivity.class.getSimpleName(), "ProfileActivity-onCreate - onSuccess");
+//                Log.d(ProfileActivity.class.getSimpleName(), "ProfileActivity-onCreate - onSuccess");
                 String img_uri = uri.toString();
-                Log.d(ProfileActivity.class.getSimpleName(), " find me url: " + img_uri + "\n");
                 ImageView PostImage = (ImageView) findViewById(R.id.profile_image);
                 Picasso.get().load(img_uri).into(PostImage);
             }
         });
-        // =======
 
-
-        // ---------------------------
         UsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                    Log.d(ProfileActivity.class.getSimpleName(), "find_me\n");
-                    Log.d(ProfileActivity.class.getSimpleName(), "onCreate - UsersRef's onDataChange");
+//                    Log.d(ProfileActivity.class.getSimpleName(), "onCreate - UsersRef's onDataChange");
+
                     String country = userSnapshot.child("country").getValue(String.class);
                     String fullName = userSnapshot.child("fullname").getValue(String.class);
                     String userName = userSnapshot.child("username").getValue(String.class);
 
-
-                    Log.d(ProfileActivity.class.getSimpleName(), "country: " + country);
-                    Log.d(ProfileActivity.class.getSimpleName(), "\nfullname: " + fullName);
-                    Log.d(ProfileActivity.class.getSimpleName(), "\nusername: " + userName);
-
+//                    Log.d(ProfileActivity.class.getSimpleName(), "country: " + country);
+//                    Log.d(ProfileActivity.class.getSimpleName(), "\nfullname: " + fullName);
+//                    Log.d(ProfileActivity.class.getSimpleName(), "\nusername: " + userName);
 
                     // find the following place to put the text
                     TextView fullNameText = (TextView) findViewById(R.id.display_name);
@@ -159,17 +151,6 @@ public class ProfileActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-//        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem item) {
-//                switch (item.getItemId()){
-//                    case R.id.profileMenu:
-//
-//                }
-//                return false;
-//            }
-//        });
     }
 
     // Bottom navigation view set up
@@ -185,12 +166,6 @@ public class ProfileActivity extends AppCompatActivity {
         menuItem.setChecked(true);
         Log.d(ProfileActivity.class.getSimpleName(), "ProfileActivity - setupBottomNavigationView - finish");
     }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.profile_menu, menu);
-//        return super.onCreateOptionsMenu(menu);
-//    }
 
     /**********************************
      // functions for the posts
@@ -216,7 +191,6 @@ public class ProfileActivity extends AppCompatActivity {
                     @Override
                     protected void populateViewHolder(ProfileActivity.PostsViewHolder viewHolder, Posts model, int position)
                     {
-                        Log.d(ProfileActivity.class.getSimpleName(), "DisplayAllUsersPosts __> ProfileActivity - populateViewHolder");
                         final String PostKey = getRef(position).getKey();
                         String img_url = model.getImage_url();
 
@@ -264,8 +238,6 @@ public class ProfileActivity extends AppCompatActivity {
                                             } else {
 
                                                 // when user type like
-
-                                                //======
                                                 Calendar calendarDate = Calendar.getInstance();
 
                                                 SimpleDateFormat currentDate = new SimpleDateFormat("dd/MMMM/yyyy");
@@ -288,9 +260,6 @@ public class ProfileActivity extends AppCompatActivity {
 
                                                 postRandomName = month + "/" + day + "/" + year + ", " + hours + ":" + mins;
                                                 LikesRef.child(PostKey).child(mAuth.getCurrentUser().getUid()).setValue(postRandomName);
-                                                //======
-
-//                                                LikesRef.child(PostKey).child(mAuth.getCurrentUser().getUid()).setValue(true);
                                                 LikeChecker = false;
                                             }
                                         }
@@ -366,7 +335,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         public void setProfileimage(Context ctx, String userId)
         {
-            Log.d(ProfileActivity.class.getSimpleName(), "!!setProfileimage!!\n");
+//            Log.d(ProfileActivity.class.getSimpleName(), "setProfileimage\n");
 
             // by website
             FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -375,21 +344,12 @@ public class ProfileActivity extends AppCompatActivity {
             // access info for user profile image
             storageRefProfile = storageRefProfile.child("Profile Images").child(userId + ".jpg");
 
-//            // debug
-//            Log.d(ProfileActivity.class.getSimpleName(), "setProfileimage - before [if (storageRefProfile != null)] ...\n");
-//            Log.d(ProfileActivity.class.getSimpleName(), "storageRefProfile: [ " + storageRefProfile.toString() + "]\n");
-//            Log.d(ProfileActivity.class.getSimpleName(), "currentUserId: [ " + userId + "]\n");
-
             // be to be careful when storageRefProfile is null reference, meaning that
             if (storageRefProfile != null){
-                Log.d(ProfileActivity.class.getSimpleName(), "setProfileimage - INSIDE [if (storageRefProfile != null)] ...\n");
                 storageRefProfile.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        Log.d(ProfileActivity.class.getSimpleName(), "setProfileimage's onSuccess\n");
-                        Log.d(ProfileActivity.class.getSimpleName(), "setProfileimage's uri.toString(): [" + uri.toString() + "]\n===============");
                         String img_uri = uri.toString();
-                        Log.d(ProfileActivity.class.getSimpleName(), "ProfileActivity - setProfileimage's - onSuccess --> " + img_uri + "\n");
                         ImageView PostImage = (ImageView) mView.findViewById(R.id.postpro);
                         Picasso.get().load(img_uri).into(PostImage); // crash
                     }
@@ -417,29 +377,22 @@ public class ProfileActivity extends AppCompatActivity {
 
         public void setPostimage(Context ctx1, String postimage)
         {
-            Log.d(ProfileActivity.class.getSimpleName(), "ProfileActivity - setPostimage");
-
-
+//            Log.d(ProfileActivity.class.getSimpleName(), "ProfileActivity - setPostimage");
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference().child("Posts Images").child(postimage);
             storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
-                    Log.d(ProfileActivity.class.getSimpleName(), "onSuccess\n");
-                    Log.d(ProfileActivity.class.getSimpleName(), "uri.toString(): [" + uri.toString() + "]\n===============");
                     String img_uri = uri.toString();
-                    Log.d(ProfileActivity.class.getSimpleName(), "ProfileActivity - setPostimage - onSuccess --> " + img_uri + "\n");
                     ImageView PostImage = (ImageView) mView.findViewById(R.id.post_image);
                     Picasso.get().load(img_uri).into(PostImage);
                 }
             });
-
-            Log.d(ProfileActivity.class.getSimpleName(), "==============\nstorageRef: [" + storageRef.toString() + "]\n===============");
         }
 
         public void setPostLocation(String location)
         {
-            Log.d(ProfileActivity.class.getSimpleName(), "setPostLocation - " + location);
+//            Log.d(ProfileActivity.class.getSimpleName(), "setPostLocation - " + location);
             TextView PostLocation = (TextView) mView.findViewById(R.id.post_location);
             PostLocation.setText(" \n" + location);
         }

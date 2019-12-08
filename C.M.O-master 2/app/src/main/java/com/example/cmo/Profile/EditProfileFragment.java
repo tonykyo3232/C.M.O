@@ -16,8 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.cmo.Account.SetupActivity;
-import com.example.cmo.Post.PostActivity;
 import com.example.cmo.R;
 import com.example.cmo.Utils.UniversalImageLoader;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -44,7 +42,6 @@ import static android.app.Activity.RESULT_OK;
 
 public class EditProfileFragment extends Fragment {
 
-
     // FireBase Variable
     private FirebaseAuth mAuth;
     private DatabaseReference UsersRef;
@@ -65,11 +62,10 @@ public class EditProfileFragment extends Fragment {
     private Uri ImageUri;
     private StorageReference UserProfileImageRef;
 
-    //===
-    private CropImage.ActivityResult result; // not sure about this
-    private Uri resultUri;
     private StorageReference filePath;
-    //===
+    private DatabaseReference PostsRef;
+    private boolean changeImg = false;
+    private HashMap updateMap_;
 
     final static int Gallery_Pick = 1;
 
@@ -83,12 +79,12 @@ public class EditProfileFragment extends Fragment {
 
         mAuth = FirebaseAuth.getInstance();
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        PostsRef = FirebaseDatabase.getInstance().getReference().child("Posts");
         currentUserID = mAuth.getCurrentUser().getUid();
 
-        // By Tony
+
         updateBtn = (Button) view.findViewById(R.id.btn_update);
 
-        // 12/6
         changeProfileText = (TextView) view.findViewById(R.id.changeProfilePhoto);
 
         UserProfileImageRef = FirebaseStorage.getInstance().getReference().child("Profile Images");
@@ -103,8 +99,6 @@ public class EditProfileFragment extends Fragment {
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                // ****
                 UsersRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -120,7 +114,7 @@ public class EditProfileFragment extends Fragment {
                             updateMap.put("fullname", newFullName);
                             updateMap.put("country", newCountry);
 
-                            // this can be dangerous
+                            // add the listener so the Firebase is able to update the data
                             UsersRef.child(currentUserID).updateChildren(updateMap).addOnCompleteListener(new OnCompleteListener() {
                                 @Override
                                 public void onComplete(@NonNull Task task) {
@@ -144,27 +138,71 @@ public class EditProfileFragment extends Fragment {
                 });
                 // ****
 
-                filePath = UserProfileImageRef.child(currentUserID + ".jpg");
-                //storing img to FireBase...
-                filePath.putFile(ImageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                        if(task.isSuccessful()){
-                            Toast.makeText(getActivity(), "Successful! The new profile image is added.", Toast.LENGTH_SHORT).show();
+                // If user want to update the profile image
+                if(changeImg){
+                    Log.d(getClass().getSimpleName(), "debug - if(changeImg){" + "\n");
+                    filePath = UserProfileImageRef.child(currentUserID + ".jpg");
+
+                    //storing img to FireBase
+                    filePath.putFile(ImageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                            if(task.isSuccessful()){
+                                Toast.makeText(getActivity(), "Successful! The new profile image is added.", Toast.LENGTH_SHORT).show();
+                            }
+                            else{
+                                String message = task.getException().getMessage();
+                                Toast.makeText(getActivity(), "Failed to update profile image, " + message, Toast.LENGTH_SHORT).show();
+                            }
                         }
-                        else{
-                            String message = task.getException().getMessage();
-                            Toast.makeText(getActivity(), "Failed to update profile image, " + message, Toast.LENGTH_SHORT).show();
+                    });
+                }
+
+                newFullName = fullNameText.getText().toString();
+
+                // for Post Reference purpose
+                updateMap_ = new HashMap();
+                updateMap_.put("fullname", newFullName);
+
+                // update the post's information of the user here
+                PostsRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.exists()) {
+                            for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+
+                                if(currentUserID.equals(userSnapshot.child("uid").getValue(String.class))
+                                        && userSnapshot.child("fullname").getValue(String.class) != newFullName) {
+
+                                    PostsRef.child(userSnapshot.getKey()).updateChildren(updateMap_)
+                                            .addOnCompleteListener(new OnCompleteListener() {
+                                                @Override
+                                                public void onComplete(@NonNull Task task) {
+                                                    if (task.isSuccessful()) {
+//                                                        Intent intent = new Intent(getActivity(), AccountSettingsActivity.class);
+//                                                        startActivity(intent);
+                                                    } else {
+                                                        Log.d(getClass().getSimpleName(), "hell no!" + "\n");
+                                                    }
+                                                }
+                                            });
+                                }
+                            }
                         }
                     }
-                });
-                //-------
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+
+                }); // end PostsRef.addValueEventListener
 
             } // end Onclick
-        });
 
 
-        // ********************recently added (12/6)
+        }); //updateBtn.setOnClickListener
+
         changeProfileText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -172,10 +210,11 @@ public class EditProfileFragment extends Fragment {
                 galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
                 galleryIntent.setType("image/*");
                 startActivityForResult(galleryIntent, Gallery_Pick);
+
+                // set it to true if user do change the profile image
+                changeImg = true;
             }
         });
-
-        // ********************recently added (12/6)
 
         ImageView backArrow = (ImageView) view.findViewById(R.id.backArrow);
         backArrow.setOnClickListener(new View.OnClickListener() {
@@ -204,8 +243,6 @@ public class EditProfileFragment extends Fragment {
 
             mprofilephoto.setImageURI(ImageUri);
         }
-
-        Log.d(getClass().getSimpleName(), "tonykyo3232 - debug" + "\n");
     }
 
     private void initImageLoader(){
@@ -219,7 +256,6 @@ public class EditProfileFragment extends Fragment {
 //        String imgURL = "www.androidcentral.com/sites/androidcentral.com/files/styles/xlarge/public/article_images/2016/08/ac-lloyd.jpg?itok=bb72IeLf";
 //        UniversalImageLoader.setImage(imgURL, mprofilephoto, null, "https://");
 
-        // By Tony -----------------------------------------------
         // Access the FireBase reference
         FirebaseStorage storage_ = FirebaseStorage.getInstance();
         StorageReference currentUserRef = storage_.getReference();
@@ -232,11 +268,8 @@ public class EditProfileFragment extends Fragment {
                 Picasso.get().load(img_uri).into(mprofilephoto);
             }
         });
-        // By Tony -----------------------------------------------
     }
 
-
-    // By Tony -----------------------------------------------
     private void setUserInfo(){
         UsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
