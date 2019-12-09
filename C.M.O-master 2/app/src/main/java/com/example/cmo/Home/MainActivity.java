@@ -376,32 +376,9 @@ public class MainActivity extends AppCompatActivity
         }
         else
         {
-            //CheckUserExistence();
+
         }
     }
-
-
-
-//    private void CheckUserExistence()
-//    {
-//        final String current_user_id = mAuth.getCurrentUser().getUid();
-//
-//        UsersRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot)
-//            {
-//                if(!dataSnapshot.hasChild(current_user_id))
-//                {
-//                    SendUserToSetupActivity();
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-//    }
 
     private void SendUserToSetupActivity()
     {

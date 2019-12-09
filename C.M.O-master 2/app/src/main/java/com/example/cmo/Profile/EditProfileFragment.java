@@ -53,21 +53,16 @@ public class EditProfileFragment extends Fragment {
     private String newCountry;
     private ImageView mprofilephoto;
     private Button updateBtn;
-
     private TextView userNameText;
     private TextView fullNameText;
     private TextView countryText;
     private TextView changeProfileText;
-
     private Uri ImageUri;
     private StorageReference UserProfileImageRef;
-
     private StorageReference filePath;
     private DatabaseReference PostsRef;
-    private DatabaseReference PostsRef_;
     private boolean changeImg = false;
     private HashMap updateMap_;
-    private HashMap updateMap_2;
 
     final static int Gallery_Pick = 1;
 
@@ -83,7 +78,6 @@ public class EditProfileFragment extends Fragment {
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         PostsRef = FirebaseDatabase.getInstance().getReference().child("Posts");
         currentUserID = mAuth.getCurrentUser().getUid();
-
 
         updateBtn = (Button) view.findViewById(R.id.btn_update);
 
@@ -138,11 +132,9 @@ public class EditProfileFragment extends Fragment {
 
                     }
                 });
-                // ****
 
                 // If user want to update the profile image
                 if(changeImg){
-                    Log.d(getClass().getSimpleName(), "debug - if(changeImg){" + "\n");
                     filePath = UserProfileImageRef.child(currentUserID + ".jpg");
 
                     //storing img to FireBase
@@ -160,9 +152,8 @@ public class EditProfileFragment extends Fragment {
                     });
                 }
 
-                newFullName = fullNameText.getText().toString();
-
                 // for Post Reference purpose
+                newFullName = fullNameText.getText().toString();
                 updateMap_ = new HashMap();
                 updateMap_.put("fullname", newFullName);
 
@@ -190,55 +181,9 @@ public class EditProfileFragment extends Fragment {
                                             });
                                 } // end if(currentUserID.equals(userSnapshot.child("uid").getValue(String.class))...
 
-                                // if the post has comment, also update the username inside the Comments
-                                if(userSnapshot.hasChild("Comments")){
-                                    Log.d(getClass().getSimpleName(), "PostsRef_ - if(userSnapshot.hasChild(Comments)" + "\n");
-                                    newUserName = userNameText.getText().toString();
-                                    Log.d(getClass().getSimpleName(), "newUserName: " + newUserName + "\n");
-
-                                    updateMap_2 = new HashMap();
-                                    updateMap_2.put("username", newUserName);
-
-                                    PostsRef_ = PostsRef.child(userSnapshot.getKey()).child("Comments"); // sth wrong here
-                                    PostsRef_.addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            Log.d(getClass().getSimpleName(), "PostsRef_ - onDataChange" + "\n");
-                                            for (DataSnapshot userSnapshot_ : dataSnapshot.getChildren()) {
-                                                if(currentUserID.equals(userSnapshot_.child("uid").getValue(String.class))
-                                                        && userSnapshot_.child("username").getValue(String.class) != newUserName){
-
-                                                    Log.d(getClass().getSimpleName(), "PostsRef_ - onDataChange - if happens..." + "\n");
-
-                                                    Log.d(getClass().getSimpleName(), "currentUserID: " + currentUserID + "\n");
-                                                    Log.d(getClass().getSimpleName(), "userSnapshot_.child(\"uid\").getValue(String.class): " + userSnapshot_.child("uid").getValue(String.class) + "\n");
-                                                    Log.d(getClass().getSimpleName(), "userSnapshot_.getKey(): " + userSnapshot_.getKey() + "\n");
-
-                                                    PostsRef_.child(userSnapshot_.getKey()).updateChildren(updateMap_2).addOnCompleteListener(new OnCompleteListener() {
-                                                        @Override
-                                                        public void onComplete(@NonNull Task task) {
-                                                            if (task.isSuccessful()) {
-                                                                Log.d(getClass().getSimpleName(), "PostsRef_ - onDataChange - onComplete" + "\n");
-                                                            }
-                                                            else {
-                                                                Log.d(getClass().getSimpleName(), "failed to update username in comments..." + "\n");
-                                                            }
-                                                        }
-                                                    });
-                                                }
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                        }
-
-                                    }); // end PostsRef_.addValueEventListener
-
-                                }// end if(userSnapshot.hasChild("Comments")
-                            }
+                            } // end PostsRef's for loop
                         }
+
                     } // end PostsRef - onDataChange
 
                     @Override
@@ -249,7 +194,6 @@ public class EditProfileFragment extends Fragment {
                 }); // end PostsRef.addValueEventListener
 
             } // end Onclick
-
 
         }); //updateBtn.setOnClickListener
 
@@ -302,9 +246,6 @@ public class EditProfileFragment extends Fragment {
     }
 
     private void setProfileImage(){
-
-//        String imgURL = "www.androidcentral.com/sites/androidcentral.com/files/styles/xlarge/public/article_images/2016/08/ac-lloyd.jpg?itok=bb72IeLf";
-//        UniversalImageLoader.setImage(imgURL, mprofilephoto, null, "https://");
 
         // Access the FireBase reference
         FirebaseStorage storage_ = FirebaseStorage.getInstance();

@@ -44,27 +44,21 @@ public class PostActivity extends AppCompatActivity {
     private Button UpdatePostButton;
     private EditText PostDescription, PostLocation;
     private ImageButton SelectPostImage;
-
     private static final int Gallery_Pick = 1;
-
     private Uri ImageUri;
     private String Description;
     private StorageReference PostImageReference; // PostImageRefernce
     private DatabaseReference UserRef, PostsRef;
     private FirebaseAuth mAuth;
-
     private String saveCurrentDate, saveCurrentTime, postRandomName, downloadUrl, current_user_id;
-
     private long coutPosts = 0;
-
-    // By Tony
     private String image_url_detail, Location;
     private Context mContext = PostActivity.this;
     private static final int ACTIVITY_NUM = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(PostActivity.class.getSimpleName(), "==============\nPostActivity - onCreate\n===============");
+        Log.d(PostActivity.class.getSimpleName(), "PostActivity - onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
 
@@ -96,8 +90,6 @@ public class PostActivity extends AppCompatActivity {
                 ValidatePostInfo();
             }
         });
-
-        Log.d(PostActivity.class.getSimpleName(), "==============\nPostActivity - onCreate - finish\n===============");
     }
 
     // Bottom navigation view set up
@@ -149,7 +141,6 @@ public class PostActivity extends AppCompatActivity {
         postRandomName = saveCurrentDate + saveCurrentTime;
 
         StorageReference filePath = PostImageReference.child("Posts Images").child(ImageUri.getLastPathSegment() + postRandomName + ".jpg");
-//        Log.d(PostActivity.class.getSimpleName(), "filePath: "+ filePath.toString() + "\n");
 
         image_url_detail = ImageUri.getLastPathSegment() + postRandomName + ".jpg";
 
@@ -198,12 +189,10 @@ public class PostActivity extends AppCompatActivity {
         UserRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-//                Log.d(PostActivity.class.getSimpleName(), "+++++onDataChange+++++\n");
+                Log.d(PostActivity.class.getSimpleName(), "onDataChange\n");
                 if(dataSnapshot.exists())
                 {
-//                    Log.d(PostActivity.class.getSimpleName(), "+++++onDataChange - if(dataSnapshot.exists())+++++\n");
                     String userFullName = dataSnapshot.child("fullname").getValue().toString();
-//                    Log.d(PostActivity.class.getSimpleName(), "+*+*+*+*+*+*+" + userFullName + "+*+*+*+*+*+*+\n");
 
                     HashMap postsMap = new HashMap();
                     postsMap.put("uid", current_user_id);
@@ -216,16 +205,12 @@ public class PostActivity extends AppCompatActivity {
                     postsMap.put("location", Location);
                     postsMap.put("counter",coutPosts); //Descending order
 
-//                    Log.d(PostActivity.class.getSimpleName(), "postRandomName :[ "+ postRandomName + "]\n");
-//                    Log.d(PostActivity.class.getSimpleName(), "current_user_id + postRandomName :[ "+ current_user_id + postRandomName + "]\n");
-
                     // userID + date + time
                     // Example: ClUQj4aEolO9JuZPid6iIAibA9n210-November-201915:02
                     PostsRef.child(current_user_id + postRandomName).updateChildren(postsMap).addOnCompleteListener(new OnCompleteListener() {
                         @Override
                         public void onComplete(Task task) {
                             if(task.isSuccessful()){
-//                                Log.d(PostActivity.class.getSimpleName(), "+++++SavingPostInformationToDatabase - if(task.isSuccessful())+++++\n");
                                 SendUserToMainActivity();
                                 Toast.makeText(PostActivity.this, "New Posts2 is updated sucessfully", Toast.LENGTH_SHORT).show();
                             }

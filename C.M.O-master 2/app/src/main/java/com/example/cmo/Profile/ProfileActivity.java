@@ -92,7 +92,6 @@ public class ProfileActivity extends AppCompatActivity {
         currentUserRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-//                Log.d(ProfileActivity.class.getSimpleName(), "ProfileActivity-onCreate - onSuccess");
                 String img_uri = uri.toString();
                 ImageView PostImage = (ImageView) findViewById(R.id.profile_image);
                 Picasso.get().load(img_uri).into(PostImage);
@@ -103,15 +102,10 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-//                    Log.d(ProfileActivity.class.getSimpleName(), "onCreate - UsersRef's onDataChange");
 
                     String country = userSnapshot.child("country").getValue(String.class);
                     String fullName = userSnapshot.child("fullname").getValue(String.class);
                     String userName = userSnapshot.child("username").getValue(String.class);
-
-//                    Log.d(ProfileActivity.class.getSimpleName(), "country: " + country);
-//                    Log.d(ProfileActivity.class.getSimpleName(), "\nfullname: " + fullName);
-//                    Log.d(ProfileActivity.class.getSimpleName(), "\nusername: " + userName);
 
                     // find the following place to put the text
                     TextView fullNameText = (TextView) findViewById(R.id.display_name);
@@ -341,8 +335,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         public void setProfileimage(Context ctx, String userId)
         {
-//            Log.d(ProfileActivity.class.getSimpleName(), "setProfileimage\n");
-
             // by website
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRefProfile = storage.getReference();
@@ -383,7 +375,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         public void setPostimage(Context ctx1, String postimage)
         {
-//            Log.d(ProfileActivity.class.getSimpleName(), "ProfileActivity - setPostimage");
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference().child("Posts Images").child(postimage);
             storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -398,7 +389,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         public void setPostLocation(String location)
         {
-//            Log.d(ProfileActivity.class.getSimpleName(), "setPostLocation - " + location);
             TextView PostLocation = (TextView) mView.findViewById(R.id.post_location);
             PostLocation.setText(" \n" + location);
         }

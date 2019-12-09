@@ -100,21 +100,14 @@ public class AlertActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot child: dataSnapshot.getChildren()){
 
-                            Log.d(AlertActivity.class.getSimpleName(), "Tony's debug place" + "\n");
-                            Log.d(AlertActivity.class.getSimpleName(), "onDataChange-child.toString(): " + child.getKey() + "\n");
-
                             String userID = child.getKey();
                             String likeTime = child.getValue(String.class);
 
-                            Log.d(AlertActivity.class.getSimpleName(), "onDataChange-userID: " + userID + "\n");
-                            Log.d(AlertActivity.class.getSimpleName(), "likeTime: " + likeTime + "\n");
-
                             // display on the phone screen
-//                            viewHolder.setUsername(userName);
                             viewHolder.setUsername(userID);
                             viewHolder.setLikMsg();
                             viewHolder.setTime(likeTime);
-                            viewHolder.setLikeUserImg(userID); // weird sometimes
+                            viewHolder.setLikeUserImg(userID);
                         }
                     }
 
@@ -125,10 +118,8 @@ public class AlertActivity extends AppCompatActivity {
                 });
             }
         };
-        Log.d(AlertActivity.class.getSimpleName(), "before setAdapter - AlertActivity - DisplayAllUsersLikes");
         likeList.setAdapter(firebaseRecyclerAdapter);
-        Log.d(AlertActivity.class.getSimpleName(), "end - AlertActivity - DisplayAllUsersLikes");
-    } // end private void DisplayAllUsersLikes()
+    }
 
     public static class LikesViewHolder extends RecyclerView.ViewHolder {
 
@@ -148,13 +139,9 @@ public class AlertActivity extends AppCompatActivity {
             UsersRef_.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    Log.d(AlertActivity.class.getSimpleName(), "setUsername's onDataChange" + "\n");
                     for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                        Log.d(AlertActivity.class.getSimpleName(), "setUsername's onDataChange's for loop" + "\n");
                         TextView tvUsername = mView.findViewById(R.id.likeuser);
                         if (userSnapshot.getKey().equals(currUserID)){
-                            Log.d(AlertActivity.class.getSimpleName(), "if (userSnapshot.getKey() == currUserID){" + "\n");
-                            Log.d(AlertActivity.class.getSimpleName(), "username: " + userSnapshot.child("username").getValue(String.class) + "\n");
                             tvUsername.setText(userSnapshot.child("username").getValue(String.class));
                             break;
                         }
@@ -179,8 +166,6 @@ public class AlertActivity extends AppCompatActivity {
         }
 
         public void setLikeUserImg(String userID){
-//            Log.d(AlertActivity.class.getSimpleName(), "Debug-setLikeUserImg" + "\n");
-//            Log.d(AlertActivity.class.getSimpleName(), "setLikeUserImg->userID: " + userID + "\n");
 
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRefProfile = storage.getReference();
@@ -193,10 +178,7 @@ public class AlertActivity extends AppCompatActivity {
                 storageRefProfile.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-//                        Log.d(AlertActivity.class.getSimpleName(), "onSuccess-Debug-setLikeUserImg" + "\n");
-//                        Log.d(AlertActivity.class.getSimpleName(), "setLikeUserImg's onSuccess" + "\n");
                         String img_uri = uri.toString();
-//                        Log.d(AlertActivity.class.getSimpleName(), "onSuccess-img_uri: " + img_uri + "\n");
                         ImageView tvImg = mView.findViewById(R.id.likeuserphoto);
                         Picasso.get().load(img_uri).into(tvImg);
                     }

@@ -112,15 +112,14 @@ public class SetupActivity extends AppCompatActivity {
         if (storage.getReference() != null)
         {
             storageRef = storage.getReference().child("Profile Images").child(currentUserID + ".jpg");
-//            Log.d(SetupActivity.class.getSimpleName(), "currentUserID: " + currentUserID + ".jpg");
 
             storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
                     String img_uri = uri.toString();
-//                    Log.d(SetupActivity.class.getSimpleName(), "img_uri: " + img_uri + "\n");
                     ImageView PostImage = (ImageView) findViewById(R.id.setup_image);
                     Picasso.get().load(img_uri).into(PostImage);
+//                    Log.d(SetupActivity.class.getSimpleName(), "img_uri: " + img_uri + "\n");
                 }
             });
         }

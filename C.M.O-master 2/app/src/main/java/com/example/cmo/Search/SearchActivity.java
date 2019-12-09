@@ -22,7 +22,6 @@ import android.widget.Toast;
 
 import com.example.cmo.Home.ClickPostActivity;
 import com.example.cmo.Home.CommentsActivity;
-import com.example.cmo.Home.MainActivity;
 import com.example.cmo.Post.Posts;
 import com.example.cmo.R;
 import com.example.cmo.Utils.BottomNavigationViewHelper;
@@ -161,19 +160,11 @@ public class SearchActivity extends AppCompatActivity {
                                         String mins = spiltTimeResult[1];
                                         String secs = spiltTimeResult[2];
 
-                                        // debug
-//                                        Log.d(MainActivity.class.getSimpleName(), "day: " + day + "\n");
-//                                        Log.d(MainActivity.class.getSimpleName(), "Month: " + month + "\n");
-//                                        Log.d(MainActivity.class.getSimpleName(), "year: " + year + "\n");
-//                                        Log.d(MainActivity.class.getSimpleName(), "hours: " + hours + "\n");
-//                                        Log.d(MainActivity.class.getSimpleName(), "mins: " + mins + "\n");
-//                                        Log.d(MainActivity.class.getSimpleName(), "secs: " + secs + "\n");
-
                                         postRandomName = month + "/" + day + "/" + year + ", " + hours + ":" + mins;
 
                                         LikesRef.child(PostKey).child(mAuth.getCurrentUser().getUid()).setValue(postRandomName);
 
-//                                        // ===== by Tony, for debug only (will delete later)
+//                                        // ===== by Tony, for debug only (can delete later)
 //                                        LikesRef.child(PostKey).addValueEventListener(new ValueEventListener() {
 //                                            @Override
 //                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
